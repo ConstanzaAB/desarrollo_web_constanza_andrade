@@ -1,0 +1,143 @@
+:root {
+  --color-borde: #dbdbdb;
+}
+
+body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+}
+
+header {
+  background-image: url('../img/header.png');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  height: 170px; /* Ajusta según la altura que desees */
+  text-align: center;
+  color: white;
+  overflow: hidden;
+}
+
+header h1 {
+  position: absolute;
+  bottom: 10px; /* Bien cerca del menú, pero aún dentro del header */
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ff4081; /* Color vistoso */
+  font-size: 2.5em;
+  margin: 0;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+nav {
+  background-color: #f8c8dc; /* Rosa pastel */
+  display: flex;
+  justify-content: center;
+}
+
+nav a {
+  color: #333; /* Color oscuro para contraste */
+  text-decoration: none;
+  padding: 14px 20px;
+  display: block;
+  transition: background-color 0.3s;
+}
+
+nav a:hover {
+  background-color: #f5b0cb; /* Rosa pastel un poco más oscuro al pasar el mouse */
+}
+
+.container {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+h1 {
+  color: #333;
+}
+
+@media (max-width: 600px) {
+  nav {
+    flex-direction: column;
+  }
+}
+
+.container {
+  border: 1px solid var(--color-borde);
+  height: 50%;
+  max-width: 350px;
+  margin: 2% auto;
+  padding: 2rem;
+  padding-top: .5rem;
+  background-color: #ffffff;
+}
+
+.logo {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#bajada {
+  text-align: center;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.grupo-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.botones {
+  display: flex;
+  justify-content: center;
+}
+
+label {
+  padding-bottom: 1rem;
+  cursor: pointer;
+}
+
+#apellido {
+  display: flex;
+  flex-direction: column;
+}
+
+#envio {
+  background-color: #4bb4f8;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 20px;
+  padding: 2% 5%;
+  width: 100%;
+  cursor: pointer;
+}
+
+#envio:hover {
+  background-color: #1177bb;
+}
+
+#logo-id {
+  width: 250px;
+  margin: 0 auto;
+}
+
+label > input {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+input {
+  border: 1px solid var(--color-borde);
+  background-color: #fafafa;
+  height: 20px;
+  padding: 9px;
+}
