@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <title>Confesiones 851</title>
+    <title>Ingreso de Aviso</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
   </head>
   <body>
@@ -15,36 +15,195 @@
     <a href="see_post.HTML">Ver avisos</a>
     <a href="statistics.HTML">Estadisticas</a>
     </nav>
+    
+    <body>
 
-    <div class="container">
-      <div class="logo">
-        <img id="logo-id" src="Confesiones.svg" alt="Logo de Confesiones 851"/>
-        <p id="bajada">Regístrate para mandar tu confesión 🥵</p>
+      <form action="#" method="post" enctype="multipart/form-data">
+        <h2>Formulario de Adopción</h2>
+
+        <!-- Región -->
+        <div class="form-group">
+        <label for="region">
+          Región <em class="label-nota">obligatorio</em>
+        </label>
+        <select id="region" name="region" required>
+          <option value="">Seleccione una región</option>
+          <option value="arica">Arica y Parinacota</option>
+          <option value="tarapaca">Tarapacá</option>
+          <option value="antofagasta">Antofagasta</option>
+          <option value="atacama">Atacama</option>
+          <option value="coquimbo">Coquimbo</option>
+          <option value="valparaiso">Valparaíso</option>
+          <option value="metropolitana">Región Metropolitana</option>
+          <option value="ohiggins">O’Higgins</option>
+          <option value="maule">Maule</option>
+          <option value="nuble">Ñuble</option>
+          <option value="biobio">Biobío</option>
+          <option value="araucania">La Araucanía</option>
+          <option value="los-rios">Los Ríos</option>
+          <option value="los-lagos">Los Lagos</option>
+          <option value="aysen">Aysén</option>
+          <option value="magallanes">Magallanes</option>
+        </select>
       </div>
-      <form class="formulario" action="">
-        <div id="mail-input" class="grupo-input">
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" required>
+
+        <!-- Comuna -->
+        <div class="form-group">
+          <label for="comuna">
+            Comuna <em class="label-nota">obligatorio</em>
+          </label>
+          <select id="comuna" name="comuna" required>
+            <option value="">Seleccione una comuna</option>
+          </select>
         </div>
-        <div id="nombre-input" class="grupo-input">
-          <label for="nombre">Nombre</label>
-          <input id="nombre" name="nombre" type="text" minlength="4" required>
+
+        <!-- Sector -->
+        <div class="form-group">
+          <label for="sector">
+            Sector <em class="label-nota">opcional</em>
+          </label>
+          <input type="text" id="sector" name="sector">
         </div>
-        <div id="apellido-input" class="grupo-input">
-          <label for="apellido">Apellido</label>
-          <input id="apellido" name="apellido" type="text" maxlength="12" required>
+
+        <!-- Nombre -->
+        <div class="form-group">
+          <label for="nombre">
+            Nombre <em class="label-nota">obligatorio</em>
+          </label>
+          <input type="text" id="nombre" name="nombre" required>
         </div>
-        <div id="contrasenna-input" class="grupo-input">
-          <label for="contrasenna">Contraseña</label>
-          <input id="contrasenna" name="contrasenna" type="password" required>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">
+            Correo electrónico <em class="label-nota">obligatorio</em>
+          </label>
+          <input type="email" id="email" name="email" required>
         </div>
-        <div class="botones">
-          <button type="button" id="envio" onclick="validarForm()">
-            Registrarse
-          </button>
+
+        <!-- Número celular -->
+        <div class="form-group">
+          <label for="celular">
+            Número de celular <em class="label-nota">opcional</em>
+          </label>
+          <input type="tel" id="celular" name="celular">
         </div>
+
+        <!-- Contactar por redes sociales -->
+        <div class="form-group">
+          <label for="tipo-red">
+            Contactar por: (máx 5) <em class="label-nota">opcional</em>
+          </label>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <select id="tipo-red">
+              <option value="">Selecciona una red</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Instagram">Instagram</option>
+              <option value="Facebook">Facebook</option>
+              <option value="Telegram">Telegram</option>
+              <option value="X">X (Twitter)</option>
+              <option value="Otro">Otro</option>
+            </select>
+
+            <input type="text" id="dato-red" placeholder="Usuario / enlace" />
+
+            <button type="button" id="agregar-red">Agregar</button>
+          </div>
+
+          <ul id="lista-redes" style="margin-top: 10px;"></ul>
+        </div>
+
+        <!-- Tipo (dos opciones) -->
+        <div class="form-group">
+          <label>Tipo de animal <em class="label-nota">obligatorio</em> </label>
+            <div class="radio-group">
+              <label>
+                <input type="radio" name="tipo" value="perro" required>
+                Perro
+              </label>
+              <label>
+                <input type="radio" name="tipo" value="gato">
+                Gato
+              </label>
+            </div>
+          </div>
+
+        <!-- Cantidad -->
+        <div class="form-group">
+          <label for="cantidad">
+            Cantidad <em class="label-nota">obligatorio</em>
+          </label>
+          <input type="number" id="cantidad" name="cantidad" min="1" required>
+        </div>
+
+        <!-- Edad + unidad -->
+        <div class="form-row" style="display: flex; gap: 20px; align-items: flex-end;">
+          <div class="form-group">
+            <label for="edad">
+              Edad <em class="label-nota">obligatorio</em>
+            </label>
+            <input type="number" id="edad" name="edad" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Unidad <em class="label-nota">obligatorio</em></label>
+            <div class="radio-group">
+              <label>
+                <input type="radio" name="unidad_edad" value="meses" required>
+                Meses
+              </label>
+              <label>
+                <input type="radio" name="unidad_edad" value="años">
+                Años
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fecha disponibilidad -->
+        <div class="form-group">
+          <label for="fecha-entrega">
+            Fecha de disponibilidad para entrega <em class="label-nota">obligatorio</em>
+          </label>
+          <input type="datetime-local" id="fecha-entrega" name="fecha_entrega" required>
+          <small id="fecha-mostrar" class="form-hint"></small>
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group">
+          <label for="descripcion">
+            Descripción <em class="label-nota">opcional</em>
+          </label>
+          <textarea id="descripcion" name="descripcion" cols="50" rows="10"></textarea>
+        </div>
+
+        <!-- Fotos -->
+        <div class="form-group" id="foto-grupo">
+          <label for="foto1">Foto(s) <em class="label-nota">obligatorio</em></label>
+          <small> Puede subir un más de 5 fotos</small>
+          <input type="file" id="foto1" name="fotos[]" accept="image/*" required>
+          
+        </div>
+
+        <!-- Botón -->
+        <div class="form-group" style="text-align: center;">
+          <button type="submit">Enviar formulario</button>
+        </div>
+
       </form>
-    </div>
-    <script src="validador.js"></script>
+      
+      
+
+      <div id="confirm-modal" class="modal-hidden">
+        <div class="modal-content">
+          <p>¿Quieres enviar el formulario y regresar al inicio?</p>
+          <div class="modal-buttons">
+            <button id="btn-yes" class="botton">Sí, estoy seguro</button>
+            <button id="btn-no" class="botton">No, no estoy seguro, quiero volver al formulario</button>
+          </div>
+        </div>
+      </div>
+
+      <script src="js/validador.js"></script>
+
   </body>
 </html>

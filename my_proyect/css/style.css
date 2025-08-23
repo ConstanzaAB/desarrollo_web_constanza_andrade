@@ -1,11 +1,10 @@
 :root {
   --color-borde: #dbdbdb;
 }
-
 body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
 }
 
 header {
@@ -13,7 +12,7 @@ header {
   background-size: cover;
   background-position: center;
   position: relative;
-  height: 170px; /* Ajusta según la altura que desees */
+  height: 170px;
   text-align: center;
   color: white;
   overflow: hidden;
@@ -21,23 +20,38 @@ header {
 
 header h1 {
   position: absolute;
-  bottom: 10px; /* Bien cerca del menú, pero aún dentro del header */
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  color: #ff4081; /* Color vistoso */
+  color: #ff4081;
   font-size: 2.5em;
   margin: 0;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 }
 
+h1, h1.title {
+  color: #ff4081;          
+  font-size: 3em;            
+  text-align: center;       
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1); 
+  font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+}
+
+.resume-pag {
+  font-size: 2em;            
+  text-align: center;        
+}
+
 nav {
-  background-color: #f8c8dc; /* Rosa pastel */
+  background-color: #f8c8dc;
   display: flex;
   justify-content: center;
 }
 
 nav a {
-  color: #333; /* Color oscuro para contraste */
+  color: #1c1c1c;
   text-decoration: none;
   padding: 14px 20px;
   display: block;
@@ -45,7 +59,7 @@ nav a {
 }
 
 nav a:hover {
-  background-color: #f5b0cb; /* Rosa pastel un poco más oscuro al pasar el mouse */
+  background-color: #f5b0cb;
 }
 
 .container {
@@ -62,82 +76,171 @@ h1 {
     flex-direction: column;
   }
 }
-
-.container {
-  border: 1px solid var(--color-borde);
-  height: 50%;
-  max-width: 350px;
-  margin: 2% auto;
-  padding: 2rem;
-  padding-top: .5rem;
+.tabla-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 0 15px;
   background-color: #ffffff;
+  border: 2px solid #ccc;
+  border-radius: 5px;
 }
 
-.logo {
-  margin-bottom: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #333;
 }
 
-#bajada {
+th, td {
+  border: 2px solid #333;
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f0f0f0;
+}
+
+.img-tabla {
+  max-width: 100px;
+  height: auto;
+}
+
+.body-form {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 30px;
+    }
+
+form {
+  max-width: 600px;
+  margin: auto;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+h2, h2.form-tittle {
   text-align: center;
+  color: #ff4081;
 }
 
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+.form-group {
+  margin-bottom: 15px;
 }
 
-.grupo-input {
+.radio-group {
   display: flex;
-  flex-direction: column;
+  gap: 30px;
+  margin-top: 8px;
 }
 
-.botones {
-  display: flex;
-  justify-content: center;
+#lista-redes button {
+  background: none;
+  border: none;
+  color: #555;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  margin-left: 10px;
 }
+
+#lista-redes button:hover {
+  color: #e91e63; /* Rosa fuerte */
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  gap: 5px;
+}
+
+.form-hint {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 4px;
+  display: block;
+}
+
 
 label {
-  padding-bottom: 1rem;
-  cursor: pointer;
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
-#apellido {
+.label-nota {
+  color: #777;           /* Gris claro */
+  font-style: italic;    /* Ya es cursiva con <em>, pero por si acaso */
+  font-size: 0.8em;       /* Un poco más pequeña */
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-row {
   display: flex;
-  flex-direction: column;
+  gap: 10px;
 }
 
-#envio {
-  background-color: #4bb4f8;
-  border: none;
-  border-radius: 8px;
+.form-row .form-group {
+  flex: 1;
+}
+
+button {
+  background-color: #f48fb1;
   color: white;
-  font-size: 20px;
-  padding: 2% 5%;
-  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 16px;
 }
 
-#envio:hover {
-  background-color: #1177bb;
+button:hover {
+  background-color: #ff4081;
 }
 
-#logo-id {
-  width: 250px;
-  margin: 0 auto;
+.modal-hidden {
+  display: none;
 }
 
-label > input {
-  width: 100%;
-  margin-top: 1rem;
+#confirm-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
-input {
-  border: 1px solid var(--color-borde);
-  background-color: #fafafa;
-  height: 20px;
-  padding: 9px;
+.modal-content {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.modal-content p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
