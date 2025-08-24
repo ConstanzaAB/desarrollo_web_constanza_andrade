@@ -3,6 +3,7 @@
   <head>
     <title>Ingreso de Aviso</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="js/validador.js" defer></script>
   </head>
   <body>
     <header>
@@ -18,34 +19,34 @@
     
     <body>
 
-      <form action="#" method="post" enctype="multipart/form-data">
+      <form id="form_aviso"   novalidate>
         <h2>Formulario de Adopción</h2>
 
         <!-- Región -->
         <div class="form-group">
-        <label for="region">
-          Región <em class="label-nota">obligatorio</em>
-        </label>
-        <select id="region" name="region" required>
-          <option value="">Seleccione una región</option>
-          <option value="arica">Arica y Parinacota</option>
-          <option value="tarapaca">Tarapacá</option>
-          <option value="antofagasta">Antofagasta</option>
-          <option value="atacama">Atacama</option>
-          <option value="coquimbo">Coquimbo</option>
-          <option value="valparaiso">Valparaíso</option>
-          <option value="metropolitana">Región Metropolitana</option>
-          <option value="ohiggins">O’Higgins</option>
-          <option value="maule">Maule</option>
-          <option value="nuble">Ñuble</option>
-          <option value="biobio">Biobío</option>
-          <option value="araucania">La Araucanía</option>
-          <option value="los-rios">Los Ríos</option>
-          <option value="los-lagos">Los Lagos</option>
-          <option value="aysen">Aysén</option>
-          <option value="magallanes">Magallanes</option>
-        </select>
-      </div>
+          <label for="region">
+            Región <em class="label-nota">obligatorio</em>
+          </label>
+          <select id="region" name="region" required>
+            <option value="">Seleccione una región</option>
+            <option value="arica">Arica y Parinacota</option>
+            <option value="tarapaca">Tarapacá</option>
+            <option value="antofagasta">Antofagasta</option>
+            <option value="atacama">Atacama</option>
+            <option value="coquimbo">Coquimbo</option>
+            <option value="valparaiso">Valparaíso</option>
+            <option value="metropolitana">Región Metropolitana</option>
+            <option value="ohiggins">O’Higgins</option>
+            <option value="maule">Maule</option>
+            <option value="nuble">Ñuble</option>
+            <option value="biobio">Biobío</option>
+            <option value="araucania">La Araucanía</option>
+            <option value="los-rios">Los Ríos</option>
+            <option value="los-lagos">Los Lagos</option>
+            <option value="aysen">Aysén</option>
+            <option value="magallanes">Magallanes</option>
+          </select>
+        </div>
 
         <!-- Comuna -->
         <div class="form-group">
@@ -177,33 +178,62 @@
         </div>
 
         <!-- Fotos -->
-        <div class="form-group" id="foto-grupo">
-          <label for="foto1">Foto(s) <em class="label-nota">obligatorio</em></label>
-          <small> Puede subir un más de 5 fotos</small>
-          <input type="file" id="foto1" name="fotos[]" accept="image/*" required>
-          
+        <div class="form-group" id="fotos-container">
+          <label>
+            Fotos <em class="label-nota">obligatorio</em>
+          </label>
+          <div id="contenedor-fotos">
+            <input type="file" name="fotos[]" accept="image/*" class="foto-input" required>
+          </div>
+          <button type="button" id="agregar-foto" style="display: none; margin-top: 10px;">agregar otra foto</button>
         </div>
 
         <!-- Botón -->
         <div class="form-group" style="text-align: center;">
-          <button type="submit">Enviar formulario</button>
+          <button id="submit-btn" type="submit">Agregar este aviso de adopción</button>
         </div>
 
       </form>
-      
-      
-
-      <div id="confirm-modal" class="modal-hidden">
-        <div class="modal-content">
-          <p>¿Quieres enviar el formulario y regresar al inicio?</p>
-          <div class="modal-buttons">
-            <button id="btn-yes" class="botton">Sí, estoy seguro</button>
-            <button id="btn-no" class="botton">No, no estoy seguro, quiero volver al formulario</button>
-          </div>
+      <!-- Modal de confirmación -->
+      <div id="confirmModal" style="
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      ">
+        <div style="
+          background: white;
+          padding: 20px 30px;
+          border-radius: 10px;
+          text-align: center;
+          box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        ">
+          <p>¿Estás seguro que desea agregar este aviso de adopción?</p>
+          <button id="btn-si">Sí, estoy seguro</button>
+          <button id="btn-no">No, no estoy seguro, quiero volver al formulario</button>
         </div>
       </div>
-
-      <script src="js/validador.js"></script>
+      <div id="mensajeExito" style="
+        display: none;
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #d1ffd6;
+        color: #065f1c;
+        padding: 15px 25px;
+        border: 2px solid #06c258;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        z-index: 1001;
+        font-size: 16px;
+      ">
+        Hemos recibido la información de adopción, muchas gracias y suerte!
+      </div>
+      
 
   </body>
 </html>

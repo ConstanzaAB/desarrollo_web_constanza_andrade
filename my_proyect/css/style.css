@@ -1,12 +1,24 @@
 :root {
   --color-borde: #dbdbdb;
+  --color-principal: #ff4081;
+  --color-fondo: #f4f4f4;
+  --color-nav: #f8c8dc;
+  --color-nav-hover: #f5b0cb;
 }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-color: var(--color-fondo);
 }
 
+/* ================= HEADER ================== */
 header {
   background-image: url('../img/header.png');
   background-size: cover;
@@ -23,31 +35,26 @@ header h1 {
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  color: #ff4081;
+  color: var(--color-principal);
   font-size: 2.5em;
   margin: 0;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-}
-
-h1, h1.title {
-  color: #ff4081;          
-  font-size: 3em;            
-  text-align: center;       
-  margin-bottom: 20px;
-  font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1); 
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
   font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
 }
 
-.resume-pag {
-  font-size: 2em;            
-  text-align: center;        
+h1 {
+  font-size: 48px; /* o usa 3rem, según prefieras */
+  color: var(--color-principal); /* rosa vibrante */
+  font-weight: bold;
+  text-align: center; /* opcional, para centrarlo */
 }
 
+/* ================= NAV ================== */
 nav {
-  background-color: #f8c8dc;
+  background-color: var(--color-nav);
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 nav a {
@@ -55,27 +62,144 @@ nav a {
   text-decoration: none;
   padding: 14px 20px;
   display: block;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
 nav a:hover {
-  background-color: #f5b0cb;
+  background-color: var(--color-nav-hover);
 }
 
+/* ============= CONTENEDORES GENERALES ============ */
 .container {
   padding: 40px 20px;
   text-align: center;
 }
 
-h1 {
-  color: #333;
+.resume-pag {
+  font-size: 2em;
+  text-align: center;
 }
 
-@media (max-width: 600px) {
-  nav {
-    flex-direction: column;
-  }
+/* ============= FORMULARIO ============ */
+form {
+  max-width: 600px;
+  margin: 40px auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
+h2,
+h2.form-tittle {
+  text-align: center;
+  color: var(--color-principal);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.radio-group {
+  display: flex;
+  gap: 30px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: normal;
+}
+
+/* Labels */
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.label-nota {
+  color: #777;
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+/* Inputs, Selects, Textarea */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--color-borde);
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+input:required,
+select:required,
+textarea:required {
+  border-left: 4px solid var(--color-principal);
+}
+
+input[type="file"] {
+  padding: 6px;
+  border: 1px dashed #ccc;
+  background-color: #fafafa;
+}
+
+.form-hint {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 4px;
+  display: block;
+}
+
+/* ========== BOTONES ========== */
+button {
+  background-color: #f48fb1;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--color-principal);
+}
+
+/* Botón eliminar en redes */
+#lista-redes button {
+  background: none;
+  border: none;
+  color: #555;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  margin-left: 10px;
+}
+
+#lista-redes button:hover {
+  color: #e91e63;
+}
+
+/* ========== TABLA ========== */
 .tabla-container {
   max-width: 700px;
   margin: 40px auto;
@@ -91,7 +215,8 @@ table {
   border: 2px solid #333;
 }
 
-th, td {
+th,
+td {
   border: 2px solid #333;
   padding: 10px;
   text-align: left;
@@ -105,142 +230,37 @@ th {
   max-width: 100px;
   height: auto;
 }
-
-.body-form {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      padding: 30px;
-    }
-
-form {
-  max-width: 600px;
-  margin: auto;
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+/* ========== VALIDACIÓN VISUAL (opcional) ========== */
+.input-error {
+  border: 2px solid red;
+  background-color: #ffe6e6;
 }
 
-h2, h2.form-tittle {
-  text-align: center;
-  color: #ff4081;
+#mensajeExito {
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-.form-group {
-  margin-bottom: 15px;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, 0); }
+  to { opacity: 1; transform: translate(-50%, 20px); }
 }
 
-.radio-group {
-  display: flex;
-  gap: 30px;
-  margin-top: 8px;
-}
+/* ========== RESPONSIVE ========== */
+@media (max-width: 600px) {
+  nav {
+    flex-direction: column;
+  }
 
-#lista-redes button {
-  background: none;
-  border: none;
-  color: #555;
-  text-decoration: underline;
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 0;
-  margin-left: 10px;
-}
+  form {
+    padding: 20px;
+  }
 
-#lista-redes button:hover {
-  color: #e91e63; /* Rosa fuerte */
-}
+  .form-row {
+    flex-direction: column;
+  }
 
-.radio-group label {
-  display: flex;
-  align-items: center;
-  font-weight: normal;
-  gap: 5px;
-}
-
-.form-hint {
-  font-size: 0.9rem;
-  color: #555;
-  margin-top: 4px;
-  display: block;
-}
-
-
-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.label-nota {
-  color: #777;           /* Gris claro */
-  font-style: italic;    /* Ya es cursiva con <em>, pero por si acaso */
-  font-size: 0.8em;       /* Un poco más pequeña */
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.form-row {
-  display: flex;
-  gap: 10px;
-}
-
-.form-row .form-group {
-  flex: 1;
-}
-
-button {
-  background-color: #f48fb1;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-button:hover {
-  background-color: #ff4081;
-}
-
-.modal-hidden {
-  display: none;
-}
-
-#confirm-modal {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: #fff;
-  padding: 30px 40px;
-  border-radius: 10px;
-  max-width: 500px;
-  width: 90%;
-  text-align: center;
-  box-sizing: border-box;
-}
-
-.modal-content p {
-  font-size: 1.2em;
-  margin-bottom: 30px;
-}
-
-.modal-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
+  .radio-group {
+    flex-direction: column;
+    gap: 10px;
+  }
 }

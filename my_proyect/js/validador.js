@@ -19,7 +19,6 @@ const Formulario = (() => {
     magallanes: ["Punta Arenas", "Puerto Natales", "Porvenir", "Cabo de Hornos"]
   };
 
-  // Función para actualizar comunas según la región seleccionada
   function actualizarComunas(regionSelectId = 'region', comunaSelectId = 'comuna') {
     const regionSelect = document.getElementById(regionSelectId);
     const comunaSelect = document.getElementById(comunaSelectId);
@@ -41,79 +40,25 @@ const Formulario = (() => {
     });
   }
 
-  // Otros validadores o funciones del formulario pueden ir aquí
-  const validadorMail = (mail) => mail && mail.includes("@") && mail.length<101;
+  const validadorMail = (mail) => mail && mail.includes("@") && mail.length < 101;
+  const validadorCelular = (celular) => /^\+\d{3}\.\d{8}$/.test(celular);
+  const validadorGeneral = (input) => input && input.length > 3 && input.length < 201;
 
-  const validadorCelular = (celular) => {
-    const regex = /^\+\d{3}\.\d{8}$/;
-    return regex.test(celular);
-  }
-
-  const validadorGeneral = (input) => {
-    let valido = false; // definicion de variables
-    if (input && input.length > 3 && input.length < 201) {
-      valido = true;
-    }
-    return valido;
-  };
-const validarForm = () => {
-  console.log("Enviando..."); // imprimir en consola
-
-  // obtener elementos del DOM por el ID
-  let emailInput = document.getElementById("email");
-  let nombreInput = document.getElementById("nombre");
-  let apellidoInput = document.getElementById("apellido");
-  let pwdInput = document.getElementById("contrasenna");
-
-  let msg = "";
-
-  if (!validadorMail(emailInput.value)) {
-    msg += "Mail malo!\n";
-    emailInput.style.borderColor = "red"; // cambiar estilo con JS!!
-  } else {
-    emailInput.style.borderColor = "";
-  }
-
-  if (!validadorNombre(nombreInput.value)) {
-    msg += "Nombre malo!\n";
-    nombreInput.style.borderColor = "red";
-  } else {
-    nombreInput.style.borderColor = "";
-  }
-
-  if (!validadorApellido(apellidoInput.value)) {
-    msg += "Apellido malo!\n";
-    apellidoInput.style.borderColor = "red";
-  } else {
-    apellidoInput.style.borderColor = "";
-  }
-
-  if (!validadorContrasena(pwdInput.value)) {
-    msg += "Contraseña mala!\n";
-    pwdInput.style.borderColor = "red";
-  } else {
-    pwdInput.style.borderColor = "";
-  }
-
-  if (msg === "") {
-    msg = "Felicidades ya tienes una cuenta!";
-  }
-  alert(msg); // alertas JS
-};
-  // Exportar solo lo necesario
   return {
     init() {
       actualizarComunas();
-      // Aquí puedes llamar a otras inicializaciones si las tienes
     },
     validadorMail,
     validadorGeneral,
     validadorCelular
-    // etc.
   };
 })();
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
+  // Inicializar comunas dinámicas
+  Formulario.init();
+
+  // Gestión de redes sociales
   const btnAgregar = document.getElementById("agregar-red");
   const selectRed = document.getElementById("tipo-red");
   const inputDato = document.getElementById("dato-red");
@@ -139,10 +84,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const li = document.createElement("li");
     li.textContent = `${tipo}: ${dato}`;
-    
-    // Agregar botón para eliminar
+
     const btnEliminar = document.createElement("button");
-    btnEliminar.textContent = "Eliminar";
     btnEliminar.innerHTML = "X Eliminar";
     btnEliminar.addEventListener("click", () => {
       listaRedes.removeChild(li);
@@ -152,13 +95,11 @@ document.addEventListener("DOMContentLoaded", function () {
     li.appendChild(btnEliminar);
     listaRedes.appendChild(li);
 
-    // Limpiar campos
     selectRed.value = "";
     inputDato.value = "";
   });
-});
 
-document.addEventListener("DOMContentLoaded", function () {
+  // Fecha mínima para entrega
   const inputFecha = document.getElementById("fecha-entrega");
   const mostrarFecha = document.getElementById("fecha-mostrar");
 
@@ -176,67 +117,117 @@ document.addEventListener("DOMContentLoaded", function () {
     inputFecha.value = valor;
     inputFecha.min = valor;
 
-    // Mostrar en formato YYYY-MM-DD HH:MM
     mostrarFecha.textContent = `La fecha mínima de entrega es: ${year}-${month}-${day} ${hours}:${minutes}`;
   }
-});
 
-(function () {
-  const fotoGrupo = document.getElementById('foto-grupo');
-  const maxFotos = 5;
+  const contenedorFotos = document.getElementById('contenedor-fotos');
+  const botonAgregar = document.getElementById('agregar-foto');
 
-  fotoGrupo.addEventListener('change', function (e) {
-    // Solo actuamos si el cambio viene de un input file
-    if (e.target && e.target.type === 'file') {
-      const inputsFile = fotoGrupo.querySelectorAll('input[type="file"]');
-      
-      // Solo agregamos si hay menos de maxFotos inputs
-      if (inputsFile.length < maxFotos) {
-        // Verificamos que el input actual tenga un archivo seleccionado
-        if (e.target.files.length > 0) {
-          // Verificamos que el siguiente input no exista ya (para no agregar inputs repetidos)
-          const nextIndex = inputsFile.length + 1;
-          if (!document.getElementById('foto' + nextIndex)) {
-            const nuevoInput = document.createElement('input');
-            nuevoInput.type = 'file';
-            nuevoInput.id = 'foto' + nextIndex;
-            nuevoInput.name = 'fotos[]';
-            nuevoInput.accept = 'image/*';
-
-            // Insertamos después del último input file
-            fotoGrupo.appendChild(nuevoInput);
-          }
-        }
+  // Escuchar cambios en el contenedor de fotos
+  contenedorFotos.addEventListener('change', (e) => {
+    if (e.target && e.target.matches('input[type="file"]')) {
+      // Mostrar el botón "Agregar" solo si hay un archivo seleccionado
+      if (e.target.files.length > 0) {
+        botonAgregar.style.display = 'inline-block';
       }
     }
   });
-})();
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("form");
-  const modal = document.getElementById("confirm-modal");
-  const btnYes = document.getElementById("btn-yes");
-  const btnNo = document.getElementById("btn-no");
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    // Mostrar modal
-    modal.classList.remove("modal-hidden");
+  // Al hacer clic en "Agregar", se añade un nuevo input file
+  botonAgregar.addEventListener('click', () => {
+    const nuevoInput = document.createElement('input');
+    nuevoInput.type = 'file';
+    nuevoInput.name = 'fotos[]';
+    nuevoInput.accept = 'image/*';
+    nuevoInput.classList.add('foto-input');
+    nuevoInput.style.marginTop = '10px';
+
+    contenedorFotos.appendChild(nuevoInput);
+    botonAgregar.style.display = 'none'; // Ocultar el botón hasta que se seleccione la nueva imagen
   });
 
-  btnYes.addEventListener("click", () => {
-    alert("Gracias por confirmar. Ahora serás redirigido al inicio.");
-    window.location.href = "index.html"; // Cambia la URL según tu página de inicio
+  function mostrarMensajeError(texto) {
+    let mensaje = document.getElementById('mensajeError');
+    
+    if (!mensaje) {
+      mensaje = document.createElement('div');
+      mensaje.id = 'mensajeError';
+      mensaje.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #ffd2d2;
+        color: #a40000;
+        padding: 12px 20px;
+        border: 1px solid #a40000;
+        border-radius: 8px;
+        z-index: 2000;
+        font-size: 15px;
+      `;
+      document.body.appendChild(mensaje);
+    }
+
+    mensaje.textContent = texto;
+    mensaje.style.display = 'block';
+
+    setTimeout(() => {
+      mensaje.style.display = 'none';
+    }, 3000);
+  }
+
+
+  const form = document.getElementById('form_aviso');
+  const modal = document.getElementById('confirmModal');
+  const siBtn = document.getElementById('btn-si');
+  const noBtn = document.getElementById('btn-no');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault(); // Evita el envío automático
+    modal.style.display = 'flex'; // Muestra el modal
   });
 
-  btnNo.addEventListener("click", () => {
-    // Ocultar modal y volver al formulario sin borrar nada
-    modal.classList.add("modal-hidden");
+  siBtn.addEventListener('click', () => {
+    const form = document.getElementById('form_aviso');
+    const inputsObligatorios = form.querySelectorAll('[required]');
+    let esValido = true;
+
+    // Elimina errores anteriores
+    inputsObligatorios.forEach(input => {
+      input.classList.remove('input-error');
+    });
+
+    // Verifica cada campo obligatorio
+    inputsObligatorios.forEach(input => {
+      if (!input.checkValidity()) {
+        esValido = false;
+        input.classList.add('input-error');
+      }
+    });
+
+    if (!esValido) {
+      // Oculta el modal
+      modal.style.display = 'none';
+
+      // Muestra mensaje de error
+      mostrarMensajeError("Por favor llenar los datos obligatorios");
+
+      return; // Detiene la ejecución
+    }
+
+    // Si todo es válido:
+    modal.style.display = 'none';
+    const success = document.getElementById('mensajeExito');
+    success.style.display = 'block';
+
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 2000);
+  });
+
+
+  noBtn.addEventListener('click', () => {
+    modal.style.display = 'none'; // Oculta el modal
   });
 });
 
-
-
-// Ejecutar la inicialización cuando el DOM esté listo
-document.addEventListener("DOMContentLoaded", () => {
-  Formulario.init();
-});
