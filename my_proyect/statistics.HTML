@@ -19,9 +19,26 @@
     <a href="statistics.HTML">Estadisticas</a>
   </nav>
 
-  <div class="container">
-    <h2>Bienvenido a Cat&Dog</h2>
-    <p>En esta página se pueden ver y publicar avisos de adopción para perros y gatos.</p>
+  <h1>Estadísticas</h1>
+
+  <div class="container-grafico">
+    <div class="fila-graficos">
+    <div class="grafico-contenedor">
+      <h2 class="subtitle">Adopciones por Especie</h2>
+      <img class="grafico-cuadrado" src="img/Gráfico_2.png" alt="Adopciones por especie">
+    </div>
+    <div class="grafico-contenedor">
+      <h2 class="subtitle">Tasa de Éxito</h2>
+      <img class="grafico-horizontal-small" src="img/Gráfico_3.png" alt="Tasa de éxito">
+    </div>
+  </div>
+    <div>
+      <h2 class="subtitle"> Avisos por día</h2>
+      <img class="grafico-horizontal" src="img/Gráfico_1.png" alt="Por día">
+    </div>
+    <button onclick="window.history.length > 1 ? window.history.back() : window.location.href='index.html'" class="button">
+          ⬅ Volver atrás
+    </button>
   </div>
 
 </body>
