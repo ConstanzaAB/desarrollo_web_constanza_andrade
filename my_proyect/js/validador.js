@@ -54,6 +54,17 @@ const Formulario = (() => {
   };
 })();
 
+// zoom imagen
+function abrirModal(src) {
+  document.getElementById("modal").style.display = "block";
+  document.getElementById("imagenAmpliada").src = src;
+}
+
+function cerrarModal() {
+  document.getElementById("modal").style.display = "none";
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
   // Inicializar comunas dinámicas
   Formulario.init();

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del Aviso</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/validador.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Cat&Dog</h1>
+  </header>
+
+  <nav>
+    <a href="index.HTML">Inicio</a>
+    <a href="form_add.HTML">Agregar aviso de adopción</a>
+    <a href="see_post.HTML">Ver avisos</a>
+    <a href="statistics.HTML">Estadisticas</a>
+  </nav>
+
+  <h1>Detalle del Aviso</h1>
+  <div class="detalle-contenido">     
+    <div class="texto-detalle">
+      <button onclick="window.history.length > 1 ? window.history.back() : window.location.href='see_post.html'" class="button">
+        ⬅ Volver atrás
+      </button>
+      <p><strong>Región:</strong> Metropolitana</p>
+      <p><strong>Comuna:</strong> Ñuñoa</p>
+      <p><strong>Sector:</strong> Plaza</p>
+      <p><strong>Nombre Contacto:</strong> Juan </p>
+      <p><strong>email:</strong> soyjuandos@gmail.com </p>
+      <p><strong>Contactar por:</strong> Instagram: @soy.juan</p>
+      <p><strong>Cantidad y Tipo:</strong> 1 gato</p>
+      <p><strong>Edad:</strong>3 meses</p>
+      <p><strong>Fecha Publicación:</strong> 22/08/2025 14:25</p>
+      <p><strong>Fecha Entrega:</strong> 02/09/2025 13:00</p>
+      <p><strong>Descripción:</strong> Se entrega con vacunas completas y con promesa de esterilización.</p>
+    </div>
+    <div class="imagen-lateral">
+      <img src="img/1_gatito_negro_1.jpg" alt="Gatito negro 1" class="imagen-miniatura" onclick="abrirModal(this.src)">
+      <img src="img/1_gatito_negro_2.jpg" alt="Gato negro 2" class="imagen-miniatura" onclick="abrirModal(this.src)">
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal-img" onclick="cerrarModal()">
+    <span class="cerrar-img-modal" onclick="cerrarModal()">×</span>
+    <img class="modal-img-contenido" id="imagenAmpliada">
+  </div>
+</body>
+</html>
