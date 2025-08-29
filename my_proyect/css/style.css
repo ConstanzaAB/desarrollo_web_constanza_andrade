@@ -5,6 +5,7 @@
   --color-nav: #f8c8dc;
   --color-nav-hover: #f5b0cb;
   --color-secundario: #E97132;
+  --color-seleccion-fila: #f2c3a3;
 }
 
 *,
@@ -313,7 +314,7 @@ button:hover {
 }
 
 .tabla-c-avisos tbody tr:hover {
-  background-color: var(--color-nav);
+  background-color: var(--color-seleccion-fila);
 }
 
 table {

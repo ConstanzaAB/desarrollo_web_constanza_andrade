@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalle del Aviso</title>
   <link rel="stylesheet" href="css/style.css">
-  <script src="js/validador.js"></script>
+  <script type= "module" src="js/main.js"></script>
 </head>
 <body>
   <header>
@@ -40,16 +40,16 @@
       <p><strong>Descripción:</strong> Se entrega con vacunas completas y con esterilizado. Es muy tranquilo y sociable.</p>
     </div>
     <div class="imagen-lateral">
-      <img src="img/1_gato_naranjo.jpg" alt="Gato naranjo" class="imagen-miniatura" onclick="abrirModal(this.src)">
-      <img src="img/1_gato_naranjo_1.jpg" alt="Gato naranjo 1" class="imagen-miniatura" onclick="abrirModal(this.src)">
-      <img src="img/1_gato_naranjo_2.jpg" alt="Gato naranjo 2" class="imagen-miniatura" onclick="abrirModal(this.src)">
+      <img src="img/1_gato_naranjo.jpg" alt="Gato naranjo" class="imagen-miniatura" onclick="abrirModal(this.src,this.alt)">
+      <img src="img/1_gato_naranjo_1.jpg" alt="Gato naranjo 1" class="imagen-miniatura" onclick="abrirModal(this.src,this.alt)">
+      <img src="img/1_gato_naranjo_2.jpg" alt="Gato naranjo 2" class="imagen-miniatura" onclick="abrirModal(this.src,this.alt)">
     </div>
   </div>
 
   <!-- MODAL -->
   <div id="modal" class="modal-img" onclick="cerrarModal()">
     <span class="cerrar-img-modal" onclick="cerrarModal()">×</span>
-    <img class="modal-img-contenido" id="imagenAmpliada">
+    <img class="modal-img-contenido" id="imagenAmpliada" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Imagen">
   </div>
 
 </body>
