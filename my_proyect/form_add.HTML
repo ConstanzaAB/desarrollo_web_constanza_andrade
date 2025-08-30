@@ -71,7 +71,7 @@
         <label for="nombre">
           Nombre <em class="label-nota">obligatorio</em>
         </label>
-        <input type="text" id="nombre" name="nombre" class="limitable" data-minlength="3" data-maxlength="100" placeholder="Máx 100 caracteres" required>
+        <input type="text" id="nombre" name="nombre" class="limitable" data-minlength="3" data-maxlength="200" placeholder="Máx 200 caracteres" required>
         <small class="mensaje-error" style="color: red; display: none;"></small>
       </div>
 
@@ -80,7 +80,7 @@
         <label for="email">
           Correo electrónico <em class="label-nota">obligatorio</em>
         </label>
-        <input type="email" id="email" name="email" class="limitable" data-minlength="0" data-maxlength="100" placeholder="Máx 100 caracteres" required>
+        <input type="email" id="email" name="email" class="limitable" data-minlength="14" data-maxlength="100" placeholder="Máx 100 caracteres" required>
         <small class="mensaje-error" style="color: red; display: none;"></small>
       </div>
 
@@ -92,7 +92,7 @@
         <input type="tel" id="celular" name="celular">
       </div>
 
-      <!-- Contactar por redes sociales -->
+     <!-- Contactar por redes sociales -->
       <div class="form-group">
         <label for="tipo-red">
           Contactar por: (máx 5) <em class="label-nota">opcional</em>
@@ -108,9 +108,10 @@
             <option value="Otro">Otro</option>
           </select>
 
-          <input type="text" id="dato-red" placeholder="Usuario / enlace" >
-
-          <button type="button" id="agregar-red">Agregar</button>
+          <!-- El input y el botón estarán ocultos por defecto -->
+          <input type="text" id="dato-red" placeholder="Usuario / enlace" class="limitable" data-minlength="4" data-maxlength="50" style="display: none;">
+          <small id="mensaje-error-red" class="mensaje-error" style="color: red; display: none;"></small>
+          <button type="button" id="agregar-red" style="display: none;">Agregar</button>
         </div>
 
         <ul id="lista-redes" style="margin-top: 10px;"></ul>
@@ -136,7 +137,7 @@
         <label for="cantidad">
           Cantidad <em class="label-nota">obligatorio</em>
         </label>
-        <input type="number" id="cantidad" name="cantidad" class="limitable" data-minlength="1" data-maxlength="10" placeholder="Mínimo 1" required>
+        <input type="number" id="cantidad" name="cantidad" class="limitable-num" data-minlength="1" data-maxlength="30" placeholder="Mínimo 1" required>
         <small class="mensaje-error" style="color: red; display: none;"></small>
       </div>
 
@@ -146,7 +147,7 @@
           <label for="edad">
             Edad <em class="label-nota">obligatorio</em>
           </label>
-          <input type="number" id="edad" name="edad" class="limitable" data-minlength="1" data-maxlength="20" placeholder="Mínimo 1" required>
+          <input type="number" id="edad" name="edad" class="limitable-num" data-minlength="1" data-maxlength="20" placeholder="Mínimo 1" required>
           <small class="mensaje-error" style="color: red; display: none;"></small>
         </div>
         <div class="form-group">
@@ -187,7 +188,7 @@
           Fotos <em class="label-nota">obligatorio</em>
         </label>
         <div id="contenedor-fotos">
-          <input type="file" name="fotos[]" accept="image/*" class="foto-input" required>
+          <input type="file" id="fotos" name="fotos[]" accept="image/*" class="foto-input" required>
         </div>
         <button type="button" id="agregar-foto" style="display: none; margin-top: 10px;">agregar otra foto</button>
       </div>

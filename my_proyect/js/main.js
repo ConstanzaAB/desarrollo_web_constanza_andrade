@@ -64,8 +64,8 @@ function mostrarErrores(errores) {
 
 function limpiarError(input) {
   input.classList.remove("input-error");
-  const error = input.parentNode.querySelector(".error");
-  if (error) error.remove();
+  const grupo = input.closest('.radio-group');
+  if (grupo) grupo.classList.remove('input-error');
 }
 
 function mostrarMensajeError(texto) {
@@ -98,16 +98,6 @@ function mostrarMensajeError(texto) {
   }, 3000);
 }
 
-function abrirModal(src,alt) {
-  document.getElementById("modal").style.display = "block";
-  document.getElementById("imagenAmpliada").src = src;
-  document.getElementById("imagenAmpliada").alt = alt;
-}
-
-function cerrarModal() {
-  document.getElementById("modal").style.display = "none";
-}
-
 // --- FIN FUNCIONES DE AYUDA ---
 
 
@@ -115,160 +105,222 @@ function cerrarModal() {
 
 document.addEventListener("DOMContentLoaded", () => {
   actualizarComunas();
-
   // Limitar inputs con aviso
-document.querySelectorAll('.limitable').forEach(input => {
+  document.querySelectorAll('.limitable').forEach(input => {
+      const min = parseInt(input.dataset.minlength);
+      const max = parseInt(input.dataset.maxlength);
+
+      input.addEventListener('input', () => {
+          Validador.limitarLargoConAviso(input, min, max);
+      });
+  });
+
+  // Limitar inputs numéricos con aviso
+  document.querySelectorAll('.limitable-num').forEach(input => {
     const min = parseInt(input.dataset.minlength);
     const max = parseInt(input.dataset.maxlength);
 
     input.addEventListener('input', () => {
-        !Validador.limitarLargoConAviso(input, min, max);
+      Validador.validarNumeroConAviso(input, min, max);
     });
-});
-
-  // Manejo de redes sociales
-  const btnAgregar = document.getElementById("agregar-red");
-  const selectRed = document.getElementById("tipo-red");
-  const inputDato = document.getElementById("dato-red");
-  const listaRedes = document.getElementById("lista-redes");
-
-  let redesAgregadas = [];
-
-  btnAgregar.addEventListener("click", () => {
-    const tipo = selectRed.value;
-    const dato = inputDato.value.trim();
-
-    if (!tipo || !dato) {
-      alert("Selecciona una red y escribe el dato de contacto.");
-      return;
-    }
-
-    if (redesAgregadas.length >= 5) {
-      alert("Solo puedes agregar hasta 5 redes sociales.");
-      return;
-    }
-
-    redesAgregadas.push({ tipo, dato });
-
-    const li = document.createElement("li");
-    li.textContent = `${tipo}: ${dato}`;
-
-    const btnEliminar = document.createElement("button");
-    btnEliminar.innerHTML = "X Eliminar";
-    btnEliminar.addEventListener("click", () => {
-      listaRedes.removeChild(li);
-      redesAgregadas = redesAgregadas.filter(r => !(r.tipo === tipo && r.dato === dato));
-    });
-
-    li.appendChild(btnEliminar);
-    listaRedes.appendChild(li);
-
-    selectRed.value = "";
-    inputDato.value = "";
   });
 
-  // Fecha mínima para entrega
-  const inputFecha = document.getElementById("fecha-entrega");
-  const mostrarFecha = document.getElementById("fecha-mostrar");
+  document.getElementById("tipo-red").addEventListener("change", function() {
+    var selectedRed = this.value;
+    var inputRed = document.getElementById("dato-red");
+    var agregarBtn = document.getElementById("agregar-red");
+    var mensaje_error = document.getElementById("mensaje-error-red");
 
-  if (inputFecha && mostrarFecha) {
-    const ahora = new Date();
-    ahora.setHours(ahora.getHours() + 3);
+    // Si se selecciona una red social diferente a "Selecciona una red"
+    if (selectedRed !== "") {
+      inputRed.style.display = "inline-block"; // Mostrar el input
+      agregarBtn.style.display = "inline-block"; // Mostrar el botón
+    } else {
+      inputRed.style.display = "none"; // Ocultar el input
+      agregarBtn.style.display = "none"; // Ocultar el botón
+      mensaje_error.style.display = "none"; // Ocultar mensaje de error
+    }
+  });
 
-    const year = ahora.getFullYear();
-    const month = String(ahora.getMonth() + 1).padStart(2, '0');
-    const day = String(ahora.getDate()).padStart(2, '0');
-    const hours = String(ahora.getHours()).padStart(2, '0');
-    const minutes = String(ahora.getMinutes()).padStart(2, '0');
 
-    const valor = `${year}-${month}-${day}T${hours}:${minutes}`;
-    inputFecha.value = valor;
-    inputFecha.min = valor;
+    // Manejo de redes sociales
+    const btnAgregar = document.getElementById("agregar-red");
+    const selectRed = document.getElementById("tipo-red");
+    const inputDato = document.getElementById("dato-red");
+    const listaRedes = document.getElementById("lista-redes");
 
-    mostrarFecha.textContent = `La fecha mínima de entrega es: ${year}-${month}-${day} ${hours}:${minutes}`;
-  }
+    let redesAgregadas = [];
 
-  // Contenedor y botón para agregar fotos
-  const contenedorFotos = document.getElementById('contenedor-fotos');
-  const botonAgregar = document.getElementById('agregar-foto');
+    btnAgregar.addEventListener("click", () => {
+      const tipo = selectRed.value;
+      const dato = inputDato.value.trim();
 
-  contenedorFotos.addEventListener('change', (e) => {
-    if (e.target && e.target.matches('input[type="file"]')) {
-      if (e.target.files.length > 0) {
-        botonAgregar.style.display = 'inline-block';
+      if (!tipo || !dato) {
+        alert("Selecciona una red y escribe el dato de contacto.");
+        return;
       }
+
+      if (redesAgregadas.length >= 5) {
+        alert("Solo puedes agregar hasta 5 redes sociales.");
+        return;
+      }
+
+      redesAgregadas.push({ tipo, dato });
+
+      const li = document.createElement("li");
+      li.textContent = `${tipo}: ${dato}`;
+
+      const btnEliminar = document.createElement("button");
+      btnEliminar.innerHTML = "X Eliminar";
+      btnEliminar.addEventListener("click", () => {
+        listaRedes.removeChild(li);
+        redesAgregadas = redesAgregadas.filter(r => !(r.tipo === tipo && r.dato === dato));
+      });
+
+      li.appendChild(btnEliminar);
+      listaRedes.appendChild(li);
+
+      selectRed.value = "";
+      inputDato.value = "";
+    });
+
+    // Fecha mínima para entrega
+    const inputFecha = document.getElementById("fecha-entrega");
+    const mostrarFecha = document.getElementById("fecha-mostrar");
+
+    if (inputFecha && mostrarFecha) {
+      const ahora = new Date();
+      ahora.setHours(ahora.getHours() + 3);
+
+      const year = ahora.getFullYear();
+      const month = String(ahora.getMonth() + 1).padStart(2, '0');
+      const day = String(ahora.getDate()).padStart(2, '0');
+      const hours = String(ahora.getHours()).padStart(2, '0');
+      const minutes = String(ahora.getMinutes()).padStart(2, '0');
+
+      const valor = `${year}-${month}-${day}T${hours}:${minutes}`;
+      inputFecha.value = valor;
+      inputFecha.min = valor;
+
+      mostrarFecha.textContent = `La fecha mínima de entrega es: ${year}-${month}-${day} ${hours}:${minutes}`;
     }
-  });
 
-  botonAgregar.addEventListener('click', () => {
-    const nuevoInput = document.createElement('input');
-    nuevoInput.type = 'file';
-    nuevoInput.name = 'fotos[]';
-    nuevoInput.accept = 'image/*';
-    nuevoInput.classList.add('foto-input');
-    nuevoInput.style.marginTop = '10px';
+    // Contenedor y botón para agregar fotos
+    const contenedorFotos = document.getElementById('contenedor-fotos');
+    const botonAgregar = document.getElementById('agregar-foto');
 
-    contenedorFotos.appendChild(nuevoInput);
-    botonAgregar.style.display = 'none';
-  });
-
-  // Validación y modal de confirmación en el form
-  const form = document.getElementById('form_aviso');
-  const modal = document.getElementById('confirmModal');
-  const siBtn = document.getElementById('btn-si');
-  const noBtn = document.getElementById('btn-no');
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    modal.style.display = 'flex';
-  });
-
-  siBtn.addEventListener('click', () => {
-    const inputsObligatorios = form.querySelectorAll('[required]');
-    let esValido = true;
-
-    // Limpiar errores anteriores
-    inputsObligatorios.forEach(input => limpiarError(input));
-
-    // Validar campos requeridos y con funciones del validador según id o tipo (ejemplo)
-    inputsObligatorios.forEach(input => {
-      if (!input.checkValidity()) {
-        esValido = false;
-        input.classList.add('input-error');
-      } else {
-        // Ejemplo validación adicional según id
-        if (input.id === "email" && !Validador.validarMail(input.value)) {
-          esValido = false;
-          input.classList.add('input-error');
-        }
-        if (input.id === "celular" && !Validador.validarCelular(input.value)) {
-          esValido = false;
-          input.classList.add('input-error');
-        }
-        if ((input.id === "nombre" || input.id === "apellido") && !Validador.validarGeneral(input.value)) {
-          esValido = false;
-          input.classList.add('input-error');
+    contenedorFotos.addEventListener('change', (e) => {
+      if (e.target && e.target.matches('input[type="file"]')) {
+        if (e.target.files.length > 0) {
+          botonAgregar.style.display = 'inline-block';
         }
       }
     });
 
-    if (!esValido) {
+    botonAgregar.addEventListener('click', () => {
+      const nuevoInput = document.createElement('input');
+      nuevoInput.type = 'file';
+      nuevoInput.name = 'fotos[]';
+      nuevoInput.accept = 'image/*';
+      nuevoInput.classList.add('foto-input');
+      nuevoInput.style.marginTop = '10px';
+
+      contenedorFotos.appendChild(nuevoInput);
+      botonAgregar.style.display = 'none';
+    });
+
+    // Validación y modal de confirmación en el form
+    const form = document.getElementById('form_aviso');
+    const modal = document.getElementById('confirmModal');
+    const siBtn = document.getElementById('btn-si');
+    const noBtn = document.getElementById('btn-no');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      modal.style.display = 'flex';
+    });
+
+    siBtn.addEventListener('click', () => {
+      const inputsObligatorios = form.querySelectorAll('[required]');
+      let esValido = true;
+
+      // Limpiar errores anteriores
+      inputsObligatorios.forEach(input => limpiarError(input));
+
+      const gruposValidados = new Set(); // 👈 para evitar validar dos veces el mismo grupo
+
+      inputsObligatorios.forEach(input => {
+        if (input.type === 'radio') {
+          const name = input.name;
+
+          // Ya validamos este grupo
+          if (gruposValidados.has(name)) {
+            return;
+          }
+
+          // Marcar como validado
+          gruposValidados.add(name);
+
+          const radiosDelGrupo = form.querySelectorAll(`input[name="${name}"]`);
+          const grupoContenedor = input.closest('.radio-group') || input.parentElement;
+
+          if (!Validador.validarRadio(name)) {
+            esValido = false;
+            grupoContenedor.classList.add("input-error");
+          }
+          return;
+        }
+
+        // Para otros tipos de inputs:
+        if (!input.checkValidity()) {
+          esValido = false;
+          input.classList.add('input-error');
+        } else {
+          if (input.id === "email" && !Validador.validarMail(input.value)) {
+            esValido = false;
+            input.classList.add('input-error');
+          }
+          if (input.id === "celular" && !Validador.validarCelular(input.value)) {
+            esValido = false;
+            input.classList.add('input-error');
+          }
+          if (input.id === "nombre" && !Validador.validarGeneral(input.value)) {
+            esValido = false;
+            input.classList.add('input-error');
+          }
+          if (input.id === "fotos" && !Validador.validarFotos(input)) {
+            esValido = false;
+            document.getElementById("contenedor-fotos").classList.add('input-error');
+          }
+          if (input.id === "cantidad" && !Validador.validarCantidad(input)) {
+            esValido = false;
+            input.classList.add('input-error');
+          }
+          if (input.id === "edad" && !Validador.validarEdad(input)) {
+            esValido = false;
+            input.classList.add('input-error');
+          }
+        }
+      });
+
+
+      if (!esValido) {
+        modal.style.display = 'none';
+        mostrarMensajeError("Por favor llenar los datos obligatorios correctamente.");
+        return;
+      }
+
+      // Éxito: enviar form o simular envío
       modal.style.display = 'none';
-      mostrarMensajeError("Por favor llenar los datos obligatorios correctamente.");
-      return;
-    }
+      const success = document.getElementById('mensajeExito');
+      if (success) success.style.display = 'block';
 
-    // Éxito: enviar form o simular envío
-    modal.style.display = 'none';
-    const success = document.getElementById('mensajeExito');
-    if (success) success.style.display = 'block';
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 2000);
+    });
 
-    setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 2000);
-  });
-
-  noBtn.addEventListener('click', () => {
-    modal.style.display = 'none';
-  });
+    noBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
 });

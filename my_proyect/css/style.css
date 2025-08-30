@@ -56,8 +56,6 @@ body {
 }
 
 
-
-
 /* ================= HEADER ================== */
 header {
   background-image: url('../img/header.png');
@@ -251,14 +249,6 @@ input[type="file"] {
   font-weight: bold;
   cursor: pointer;
 }
-
-@media (max-width: 850px) {
-  .modal-img-contenido {
-    width: 95%;
-    height: auto;
-  }
-}
-
 /* ========== BOTONES ========== */
 button {
   background-color: #f48fb1;
@@ -338,9 +328,9 @@ th {
   max-width: 100px;
   height: auto;
 }
-/* ========== VALIDACIÓN VISUAL¿ ========== */
+/* ========== VALIDACIÓN VISUAL ========== */
 .input-error {
-  border: 2px solid red;
+  border: 2px solid red !important;
   background-color: #ffe6e6;
 }
 
@@ -415,24 +405,6 @@ th {
   width: 30%;
 }
 
-.grafico-1 {
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  margin: 20px auto;
-  display: block;
-  box-sizing: border-box;
-  padding: 0 40px; /* Ajusta este valor según el margen deseado */
-}
-.grafico-2 {
-  width: 70%;
-  max-width: 70%;
-  height: auto;
-  margin: 20px auto;
-  display: block;
-  box-sizing: border-box;
-  padding: 0 40px; /* Ajusta este valor según el margen deseado */
-}
 @keyframes fadeIn {
   from { opacity: 0; transform: translate(-50%, 0); }
   to { opacity: 1; transform: translate(-50%, 20px); }
@@ -473,6 +445,17 @@ th {
 
   .fila-graficos .grafico-contenedor {
     flex: 0 0 100%;
+  }
+  /* Reglas para el modal */
+  .modal-img-contenido {
+    width: 95% !important;
+    height: auto !important;
+  }
+
+  .cerrar-img-modal {
+    top: 20px !important;
+    right: 20px !important;
+    font-size: 30px !important;
   }
 
 }

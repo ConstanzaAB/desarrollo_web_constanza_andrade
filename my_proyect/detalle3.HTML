@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalle del Aviso</title>
   <link rel="stylesheet" href="css/style.css">
-  <script type= "module" src="js/main.js"></script>
+  <script type= "module" src="js/zoomImg.js"></script>
 </head>
 <body>
   <header>
@@ -38,14 +38,16 @@
       <p><strong>Descripción:</strong> Se entrega con primeras vacunas. De preferencia se van juntos, son muy unidos.</p>
     </div>
     <div class="imagen-lateral">
-      <img src="img/2_perritos_1.jpg" alt="2 cachorros" class="imagen-miniatura" onclick="abrirModal(this.src,this.alt)">
+      <img src="img/2_perritos_1.jpg" alt="2 cachorros" class="imagen-miniatura">
     </div>
   </div>
 
-  <!-- MODAL -->
-  <div id="modal" class="modal-img" onclick="cerrarModal()">
-    <span class="cerrar-img-modal" onclick="cerrarModal()">×</span>
-    <img class="modal-img-contenido" id="imagenAmpliada" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Imagen">
+  <!-- Modal para zoom -->
+  <div id="modal" class="modal-img">
+    <div class="modal-contenido" onclick="event.stopPropagation()">
+      <span class="cerrar-img-modal" onclick="cerrarModal()">×</span>
+      <img id="imagenAmpliada" class="modal-img-contenido" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Imagen ampliada">
+    </div>
   </div>
 
 </body>
