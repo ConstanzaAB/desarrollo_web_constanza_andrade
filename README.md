@@ -23,8 +23,8 @@ Uso de HTML5 Y CSS3
 ### Desiciones de diseño
 * Se eligio el rosado como base y el naranjo como color secundario (es posible que se cambien en futuras entregas).
 * Todos los titulos son rosado fuerte y los subtitulos son naranjos.
-* Todos los botones son rosado claro y al colocar el cursor sobre ellos se tornan rosa suave. La barra de navegación se dejo con tonos diferentes de rosado claro, se torna ligeramente más fuerte al pasar el cursor sobre los botones.
+* Todos los botones son rosado claro y al colocar el cursor sobre ellos se tornan rosado fuerte. La barra de navegación se dejo con tonos diferentes de rosado claro, se torna ligeramente más fuerte al pasar el cursor sobre los botones.
 * Las filas en ver avisos se tornan naranjo suave al pasar el cursor sobre ellas. Se hizo para saber que efectivamente se esta seleccionando una fila y saber exactamente cual es.
-* Todos los campos del formulario tienen la palabra "obligatorio" u "opcional" al costado derecho, de color gris, en cursiva y más pequeño. 
+* Todos los campos del formulario tienen la palabra "obligatorio" u "opcional" al costado derecho. Este texto es de color gris, esta en cursiva y tiene una fuente más pequeño que la etiqueta del campo. 
 * Todos los campos del formulario que tiene limites de caracteres lo especifica en la casilla del input. Lo mismos para los datos numéricos, donde se dice el valor mínimo.
 
