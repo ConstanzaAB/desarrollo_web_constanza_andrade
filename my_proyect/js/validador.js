@@ -3,35 +3,38 @@
 export const Validador = (() => {
 
   function validarMail(mail) {
-    return mail && mail.includes("@") && mail.length < 101;
+    if (!mail) {
+      return { valido: false, mensaje: "El correo es obligatorio." };
+    }
+    if (!mail.includes("@")) {
+      return { valido: false, mensaje: "Debe incluir un '@' válido." };
+    }
+    if (mail.length > 100) {
+      return { valido: false, mensaje: "El correo no debe superar los 100 caracteres." };
+    }
+    return { valido: true, mensaje: "" };
   }
 
   function validarCelular(celular) {
-    return celular && /^\+\d{3}\.\d{8}$/.test(celular);
+      return celular && /^\+\d{3}\.\d{8}$/.test(celular);
   }
 
   function validarGeneral(texto) {
-    return texto && texto.length > 3 && texto.length < 201;
-  }
-
-  function validarFotos(input) {
-    return input.files && input.files.length > 0;
+        return texto && texto.length > 3 && texto.length < 201;
   }
 
   function validarRadio(name) {
-    const radios = document.querySelectorAll(`input[name="${name}"]`);
-    return Array.from(radios).some(r => r.checked);
-  }
-  function validarCantidad(cantidad) {
-    return cantidad && Number.isInteger(Number(cantidad)) && Number(cantidad) > 0 && Number(cantidad) < 30;
-  }
-  function validarEdad(edad) {
-    return edad && Number.isInteger(Number(edad)) && Number(edad) > 0 && Number(edad) < 20;
-  }
+  const radios = document.querySelectorAll(`input[name="${name}"]`);
+  const valido = Array.from(radios).some(r => r.checked);
+  return {
+    valido,
+    mensaje: valido ? "" : "Por favor selecciona una opción."
+  };
+}
 
-
+  
   function limitarLargoConAviso(input, min, max) {
-    const mensaje = input.nextElementSibling; // asumo que es el <small> para mensajes
+    const mensaje = input.parentElement.querySelector('.mensaje-error');
     const largo = input.value.length;
 
     if (largo > max) {
@@ -96,10 +99,7 @@ export const Validador = (() => {
     validarCelular,
     validarGeneral,
     limitarLargoConAviso,
-    validarFotos,
     validarRadio,
-    validarCantidad,
-    validarEdad,
     validarNumeroConAviso
   };
 })();

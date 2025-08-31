@@ -156,17 +156,46 @@ h2.form-tittle {
 
 .radio-group {
   display: flex;
+  flex-wrap: wrap;
   gap: 30px;
   margin-top: 8px;
-  flex-wrap: wrap;
+  align-items: center;
+  
+  /* importante para que el borde no cambie tamaño */
+  box-sizing: border-box;
+  border: 2px solid transparent; /* borde invisible */
+  padding: 4px; /* deja espacio para el borde */
+  border-radius: 4px; /* opcional para que se vea mejor */
+}
+
+.radio-group.input-error {
+  border-color: red;
 }
 
 .radio-group label {
   display: flex;
   align-items: center;
-  gap: 5px;
+  margin-right: 40px;
+  white-space: nowrap;
   font-weight: normal;
+  line-height: 1.2; /* <-- Añade esto para evitar descuadre vertical en Safari */
 }
+
+input[type="radio"] {
+  display: inline-block;
+  vertical-align: bottom; /* Alineación más uniforme en Safari */
+}
+
+.mensaje-error {
+  color: red;
+  font-size: 0.9em;
+  display: none;
+}
+.mensaje-error.mostrar {
+  display: block !important;
+}
+
+
 
 /* Labels */
 label {
@@ -424,10 +453,6 @@ th {
     flex-direction: column;
   }
 
-  .radio-group {
-    flex-direction: column;
-    gap: 10px;
-  }
   .container-grafico {
     padding: 10px;
   }

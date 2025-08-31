@@ -105,6 +105,9 @@ function mostrarMensajeError(texto) {
 
 document.addEventListener("DOMContentLoaded", () => {
   actualizarComunas();
+
+  const mform = document.getElementById('form_aviso');
+
   // Limitar inputs con aviso
   document.querySelectorAll('.limitable').forEach(input => {
       const min = parseInt(input.dataset.minlength);
@@ -117,12 +120,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Limitar inputs numéricos con aviso
   document.querySelectorAll('.limitable-num').forEach(input => {
-    const min = parseInt(input.dataset.minlength);
-    const max = parseInt(input.dataset.maxlength);
+    const min = parseInt(input.getAttribute("min"), 10);
+    const max = parseInt(input.getAttribute("max"), 10);
 
     input.addEventListener('input', () => {
       Validador.validarNumeroConAviso(input, min, max);
     });
+  });
+
+  mform.querySelectorAll('input, select, textarea').forEach(input => {
+    input.addEventListener('input', () => {
+      limpiarError(input);
+    });
+
+    // Para radios, usamos 'change' porque 'input' no aplica
+    if (input.type === 'radio') {
+      input.addEventListener('change', () => {
+        const grupo = input.closest('.radio-group');
+        const mensaje = grupo.querySelector('.mensaje-error');
+        grupo.classList.remove('input-error');
+        if (mensaje) {
+          mensaje.textContent = '';
+          mensaje.style.display = 'none';
+        }
+      });
+    }
   });
 
   document.getElementById("tipo-red").addEventListener("change", function() {
@@ -244,73 +266,146 @@ document.addEventListener("DOMContentLoaded", () => {
       const inputsObligatorios = form.querySelectorAll('[required]');
       let esValido = true;
 
-      // Limpiar errores anteriores
+      // Limpiar errores anteriores (clases y mensajes)
       inputsObligatorios.forEach(input => limpiarError(input));
+      const mensajesError = form.querySelectorAll('.mensaje-error');
+      mensajesError.forEach(m => {
+        m.textContent = '';
+        m.style.display = 'none';
+      });
 
-      const gruposValidados = new Set(); // 👈 para evitar validar dos veces el mismo grupo
+      const gruposValidados = new Set();
+
+      const celularInput = document.getElementById("celular");
+      const valorCelular = celularInput.value.trim();
+
+      if (valorCelular !== "") {
+        if (!Validador.validarCelular(valorCelular)) {
+          esValido = false;
+          const mensajeCelular = celularInput.parentElement.querySelector('.mensaje-error');
+          mensajeCelular.textContent = "Formato inválido. Usa +569.12345678";
+          mensajeCelular.style.display = 'inline';
+          celularInput.classList.add("input-error");
+        } else {
+          celularInput.classList.remove('input-error');
+          const mensajeCelular = celularInput.parentElement.querySelector('.mensaje-error');
+          if (mensajeCelular) {
+            mensajeCelular.textContent = "";
+            mensajeCelular.style.display = "none";
+          }
+        }
+      }
 
       inputsObligatorios.forEach(input => {
+
+        
         if (input.type === 'radio') {
           const name = input.name;
 
-          // Ya validamos este grupo
-          if (gruposValidados.has(name)) {
-            return;
+          if (gruposValidados.has(name)) return;
+            gruposValidados.add(name);
+
+            const grupoContenedor = input.closest('.radio-group') || input.parentElement;
+            const resultado = Validador.validarRadio(name);
+            const mensajeErrorRadio = grupoContenedor.querySelector('.mensaje-error');
+
+            if (!resultado.valido) {
+              esValido = false;
+              grupoContenedor.classList.add("input-error");
+
+              if (mensajeErrorRadio) {
+                mensajeErrorRadio.textContent = resultado.mensaje;
+                mensajeErrorRadio.style.display = "block";
+              }
+            } else {
+              grupoContenedor.classList.remove("input-error");
+
+              if (mensajeErrorRadio) {
+                mensajeErrorRadio.textContent = "";
+                mensajeErrorRadio.style.display = "none";
+              }
+            }
+
+            return; // salir del forEach en este input
           }
 
-          // Marcar como validado
-          gruposValidados.add(name);
 
-          const radiosDelGrupo = form.querySelectorAll(`input[name="${name}"]`);
-          const grupoContenedor = input.closest('.radio-group') || input.parentElement;
-
-          if (!Validador.validarRadio(name)) {
+        if (input.id === "cantidad" || input.id === "edad") {
+          const min = parseInt(input.getAttribute("min"), 10);
+          const max = parseInt(input.getAttribute("max"), 10);
+          if (!Validador.validarNumeroConAviso(input, min, max)) {
             esValido = false;
-            grupoContenedor.classList.add("input-error");
+            input.classList.add('input-error');
           }
           return;
         }
 
-        // Para otros tipos de inputs:
         if (!input.checkValidity()) {
           esValido = false;
           input.classList.add('input-error');
         } else {
-          if (input.id === "email" && !Validador.validarMail(input.value)) {
-            esValido = false;
-            input.classList.add('input-error');
-          }
-          if (input.id === "celular" && !Validador.validarCelular(input.value)) {
-            esValido = false;
-            input.classList.add('input-error');
-          }
-          if (input.id === "nombre" && !Validador.validarGeneral(input.value)) {
-            esValido = false;
-            input.classList.add('input-error');
-          }
-          if (input.id === "fotos" && !Validador.validarFotos(input)) {
-            esValido = false;
-            document.getElementById("contenedor-fotos").classList.add('input-error');
-          }
-          if (input.id === "cantidad" && !Validador.validarCantidad(input)) {
-            esValido = false;
-            input.classList.add('input-error');
-          }
-          if (input.id === "edad" && !Validador.validarEdad(input)) {
-            esValido = false;
-            input.classList.add('input-error');
-          }
-        }
-      });
+            if (input.id === "email") {
+              const resultadoValidacion = Validador.validarMail(input.value);
+              const mensajeMail = input.parentElement.querySelector('.mensaje-error');
+              if (!resultadoValidacion.valido) {
+                esValido = false;
+                mensajeMail.textContent = resultadoValidacion.mensaje;
+                mensajeMail.classList.add('mostrar');
+                input.classList.add("input-error");
+              } else {
+                input.classList.remove('input-error');
+                mensajeMail.textContent = "";
+                mensajeMail.classList.remove('mostrar');
+              }
+            }
 
+            if (input.id === "nombre") {
+              if (!Validador.validarGeneral(input.value)) {
+                esValido = false;
+                const mensajeNombre = input.parentElement.querySelector('.mensaje-error');
+                mensajeNombre.textContent = "El nombre debe tener entre 4 y 200 caracteres.";
+                mensajeNombre.classList.add('mostrar');
+                input.classList.add("input-error");
+              } else {
+                const mensajeNombre = input.parentElement.querySelector('.mensaje-error');
+                mensajeNombre.textContent = "";
+                mensajeNombre.classList.remove('mostrar');
+                input.classList.remove('input-error');
+              }
+            }
+
+
+            if (input.id === "fotos") {
+              const fotoInputs = form.querySelectorAll('input[type="file"][name="fotos[]"]');
+              const tieneAlMenosUnaFoto = Array.from(fotoInputs).some(f => f.files.length > 0);
+
+              const contenedorFotos = document.getElementById('contenedor-fotos');
+              const mensajeFotos = contenedorFotos.querySelector('.mensaje-error');
+              console.log(mensajeFotos);
+              if (!tieneAlMenosUnaFoto) {
+                esValido = false;
+                contenedorFotos.classList.add('input-error');
+                if (mensajeFotos) {
+                  mensajeFotos.textContent = "Debe subir al menos una foto.";
+                  mensajeFotos.style.display = "inline";
+                }
+              } else {
+                contenedorFotos.classList.remove('input-error');
+                if (mensajeFotos) {
+                  mensajeFotos.textContent = "";
+                  mensajeFotos.style.display = "none";
+                }
+              }
+            }
+          }
+      });
 
       if (!esValido) {
         modal.style.display = 'none';
-        mostrarMensajeError("Por favor llenar los datos obligatorios correctamente.");
+        mostrarMensajeError("Por favor llenar los datos obligatorios correctamente o verifique los opcionales.");
         return;
       }
 
-      // Éxito: enviar form o simular envío
       modal.style.display = 'none';
       const success = document.getElementById('mensajeExito');
       if (success) success.style.display = 'block';

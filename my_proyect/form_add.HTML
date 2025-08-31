@@ -15,7 +15,7 @@
     <a href="index.HTML">Inicio</a>
     <a href="form_add.HTML">Agregar aviso de adopción</a>
     <a href="see_post.HTML">Ver avisos</a>
-    <a href="statistics.HTML">Estadisticas</a>
+    <a href="statistics.HTML">Estadísticas</a>
     </nav>
     <!-- Formulario -->
     <form id="form_aviso"   novalidate>
@@ -90,6 +90,7 @@
           Número de celular <em class="label-nota">opcional</em>
         </label>
         <input type="tel" id="celular" name="celular">
+        <small class="mensaje-error" style="color: red; display: none;"></small>
       </div>
 
      <!-- Contactar por redes sociales -->
@@ -129,6 +130,7 @@
               <input type="radio" name="tipo" value="gato">
               Gato
             </label>
+            <small class="mensaje-error" style="color: red; display: none;"></small>
           </div>
         </div>
 
@@ -137,7 +139,7 @@
         <label for="cantidad">
           Cantidad <em class="label-nota">obligatorio</em>
         </label>
-        <input type="number" id="cantidad" name="cantidad" class="limitable-num" data-minlength="1" data-maxlength="30" placeholder="Mínimo 1" required>
+        <input type="number" id="cantidad" name="cantidad" class="limitable-num" min="1" max="30" placeholder="Mínimo 1" required>
         <small class="mensaje-error" style="color: red; display: none;"></small>
       </div>
 
@@ -147,7 +149,7 @@
           <label for="edad">
             Edad <em class="label-nota">obligatorio</em>
           </label>
-          <input type="number" id="edad" name="edad" class="limitable-num" data-minlength="1" data-maxlength="20" placeholder="Mínimo 1" required>
+          <input type="number" id="edad" name="edad" class="limitable-num" min="1" max="20" placeholder="Mínimo 1" required>
           <small class="mensaje-error" style="color: red; display: none;"></small>
         </div>
         <div class="form-group">
@@ -161,6 +163,7 @@
               <input type="radio" name="unidad_edad" value="años">
               Años
             </label>
+            <small class="mensaje-error" style="color: red; display: none;"></small>
           </div>
         </div>
       </div>
@@ -189,6 +192,7 @@
         </label>
         <div id="contenedor-fotos">
           <input type="file" id="fotos" name="fotos[]" accept="image/*" class="foto-input" required>
+          <small class="mensaje-error" style="color: red; display: none;"></small>
         </div>
         <button type="button" id="agregar-foto" style="display: none; margin-top: 10px;">agregar otra foto</button>
       </div>
