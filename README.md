@@ -3,7 +3,7 @@ Uso de HTML5 Y CSS3
 ## Desiciones tomadas
 
 ### Para la validación se realizo lo siguiente:
-* Si al enviar el formulario alguno o varios de los campos obligatorios estan vacíos, no se deja enviar el formulario y se regresa a este. Se mantienen los datos llenados y se marcan en rojo los campos que faltaron por llenar o por agregar (archivo).
+* Si al enviar el formulario alguno o varios de los campos obligatorios estan vacíos, no se deja enviar el formulario y se regresa a este. Se mantienen los datos llenados y se marcan en rojo los campos que faltaron por llenar o por agregar (archivo) mostrando un mensaje explicando el error.
 * Si alguno de los datos con limitaciones en la cantidad de caracteres, sobrepasa o no alcanza ese limite el contenedor se torna rojo, se dejan de aceptar caracteres y apareece un mensaje en rojo explicando porque es un error.
 * Si alguno de los datos numericos no cumple con los limites de valor maximo o minimo, el contenedor se vuelve rojo y aparece un mensaje explicando porque hay un error.
 * La fecha y hora se autocompleta con el día actual y la hora actual más tres horas.

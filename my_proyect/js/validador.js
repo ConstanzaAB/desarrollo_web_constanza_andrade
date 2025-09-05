@@ -3,24 +3,15 @@
 export const Validador = (() => {
 
   function validarMail(mail) {
-    if (!mail) {
-      return { valido: false, mensaje: "El correo es obligatorio." };
-    }
-    if (!mail.includes("@")) {
-      return { valido: false, mensaje: "Debe incluir un '@' válido." };
-    }
-    if (mail.length > 100) {
-      return { valido: false, mensaje: "El correo no debe superar los 100 caracteres." };
-    }
-    return { valido: true, mensaje: "" };
+    return mail && mail.includes("@") && mail.length > 2 && mail.length < 101;
   }
 
   function validarCelular(celular) {
       return celular && /^\+\d{3}\.\d{8}$/.test(celular);
   }
 
-  function validarGeneral(texto) {
-        return texto && texto.length > 3 && texto.length < 201;
+  function validarNombre(texto) {
+      return texto && texto.length > 3 && texto.length < 201;
   }
 
   function validarRadio(name) {
@@ -30,7 +21,7 @@ export const Validador = (() => {
     valido,
     mensaje: valido ? "" : "Por favor selecciona una opción."
   };
-}
+  }
 
   
   function limitarLargoConAviso(input, min, max) {
@@ -97,7 +88,7 @@ export const Validador = (() => {
   return {
     validarMail,
     validarCelular,
-    validarGeneral,
+    validarNombre,
     limitarLargoConAviso,
     validarRadio,
     validarNumeroConAviso

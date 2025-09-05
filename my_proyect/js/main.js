@@ -251,24 +251,24 @@ document.addEventListener("DOMContentLoaded", () => {
       botonAgregar.style.display = 'none';
     });
 
-    // Validación y modal de confirmación en el form
-    const form = document.getElementById('form_aviso');
+    // Validación y modal de confirmación en el formulario
     const modal = document.getElementById('confirmModal');
     const siBtn = document.getElementById('btn-si');
     const noBtn = document.getElementById('btn-no');
 
-    form.addEventListener('submit', (e) => {
+    mform.addEventListener('submit', (e) => {
       e.preventDefault();
       modal.style.display = 'flex';
     });
 
     siBtn.addEventListener('click', () => {
-      const inputsObligatorios = form.querySelectorAll('[required]');
+      const inputsObligatorios = mform.querySelectorAll('[required]');
+      modal.style.display = 'none'; 
       let esValido = true;
 
       // Limpiar errores anteriores (clases y mensajes)
       inputsObligatorios.forEach(input => limpiarError(input));
-      const mensajesError = form.querySelectorAll('.mensaje-error');
+      const mensajesError = mform.querySelectorAll('.mensaje-error');
       mensajesError.forEach(m => {
         m.textContent = '';
         m.style.display = 'none';
@@ -303,31 +303,29 @@ document.addEventListener("DOMContentLoaded", () => {
           const name = input.name;
 
           if (gruposValidados.has(name)) return;
-            gruposValidados.add(name);
 
-            const grupoContenedor = input.closest('.radio-group') || input.parentElement;
-            const resultado = Validador.validarRadio(name);
-            const mensajeErrorRadio = grupoContenedor.querySelector('.mensaje-error');
+          gruposValidados.add(name);
 
-            if (!resultado.valido) {
-              esValido = false;
-              grupoContenedor.classList.add("input-error");
+          const grupoContenedor = input.closest('.radio-group') || input.parentElement;
+          const resultado = Validador.validarRadio(name);
+          const mensajeErrorRadio = grupoContenedor.querySelector('.mensaje-error');
 
-              if (mensajeErrorRadio) {
-                mensajeErrorRadio.textContent = resultado.mensaje;
-                mensajeErrorRadio.style.display = "block";
-              }
-            } else {
-              grupoContenedor.classList.remove("input-error");
-
-              if (mensajeErrorRadio) {
-                mensajeErrorRadio.textContent = "";
-                mensajeErrorRadio.style.display = "none";
-              }
+          if (!resultado.valido) {
+            esValido = false;
+            if (mensajeErrorRadio) {
+              mensajeErrorRadio.textContent = resultado.mensaje;
+              mensajeErrorRadio.style.display = 'inline';
             }
-
-            return; // salir del forEach en este input
+            grupoContenedor.classList.add("input-error");
+          } else {
+            grupoContenedor.classList.remove("input-error");
+            if (mensajeErrorRadio) {
+              mensajeErrorRadio.textContent = "";
+              mensajeErrorRadio.style.display = "none";
+            }
           }
+          return; // salir del forEach en este input
+        }
 
 
         if (input.id === "cantidad" || input.id === "edad") {
@@ -343,70 +341,77 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!input.checkValidity()) {
           esValido = false;
           input.classList.add('input-error');
-        } else {
-            if (input.id === "email") {
-              const resultadoValidacion = Validador.validarMail(input.value);
-              const mensajeMail = input.parentElement.querySelector('.mensaje-error');
-              if (!resultadoValidacion.valido) {
+        }
+          if (input.type === "email") {
+            const valor = input.value.trim();
+            const mensajeMail = input.parentElement.querySelector('.mensaje-error');
+
+            if (mensajeMail) {
+              if (valor === "") {
                 esValido = false;
-                mensajeMail.textContent = resultadoValidacion.mensaje;
-                mensajeMail.classList.add('mostrar');
+                mensajeMail.textContent = "El correo es obligatorio.";
+                mensajeMail.style.display = 'inline';
                 input.classList.add("input-error");
               } else {
-                input.classList.remove('input-error');
-                mensajeMail.textContent = "";
-                mensajeMail.classList.remove('mostrar');
-              }
-            }
-
-            if (input.id === "nombre") {
-              if (!Validador.validarGeneral(input.value)) {
-                esValido = false;
-                const mensajeNombre = input.parentElement.querySelector('.mensaje-error');
-                mensajeNombre.textContent = "El nombre debe tener entre 4 y 200 caracteres.";
-                mensajeNombre.classList.add('mostrar');
-                input.classList.add("input-error");
-              } else {
-                const mensajeNombre = input.parentElement.querySelector('.mensaje-error');
-                mensajeNombre.textContent = "";
-                mensajeNombre.classList.remove('mostrar');
-                input.classList.remove('input-error');
-              }
-            }
-
-
-            if (input.id === "fotos") {
-              const fotoInputs = form.querySelectorAll('input[type="file"][name="fotos[]"]');
-              const tieneAlMenosUnaFoto = Array.from(fotoInputs).some(f => f.files.length > 0);
-
-              const contenedorFotos = document.getElementById('contenedor-fotos');
-              const mensajeFotos = contenedorFotos.querySelector('.mensaje-error');
-              console.log(mensajeFotos);
-              if (!tieneAlMenosUnaFoto) {
-                esValido = false;
-                contenedorFotos.classList.add('input-error');
-                if (mensajeFotos) {
-                  mensajeFotos.textContent = "Debe subir al menos una foto.";
-                  mensajeFotos.style.display = "inline";
-                }
-              } else {
-                contenedorFotos.classList.remove('input-error');
-                if (mensajeFotos) {
-                  mensajeFotos.textContent = "";
-                  mensajeFotos.style.display = "none";
+                const resultadoValidacion = Validador.validarMail(valor);
+                if (!resultadoValidacion.valido) {
+                  esValido = false;
+                  mensajeMail.textContent = "El email debe tener entre 3 y 100 caracteres y contener '@'.";
+                  mensajeMail.style.display = 'inline';
+                  input.classList.add("input-error");
+                } else {
+                  mensajeMail.textContent = "";
+                  mensajeMail.style.display = "none";
+                  input.classList.remove("input-error");
                 }
               }
             }
           }
-      });
+
+          if (input.id === "nombre") {
+            if (!Validador.validarNombre(input.value)) {
+              esValido = false;
+              const mensajeNombre = input.parentElement.querySelector('.mensaje-error');
+              mensajeNombre.textContent = "El nombre debe tener entre 4 y 200 caracteres.";
+              mensajeNombre.style.display = 'inline';
+              input.classList.add("input-error");
+            } else {
+              const mensajeNombre = input.parentElement.querySelector('.mensaje-error');
+              mensajeNombre.textContent = "";
+              mensajeNombre.style.display = "none";
+              input.classList.remove('input-error');
+            }
+          }
+
+
+          const fotoInputs = mform.querySelectorAll('input[type="file"][name="fotos[]"]');
+          const tieneAlMenosUnaFoto = Array.from(fotoInputs).some(f => f.files.length > 0);
+
+          const contenedorFotos = document.getElementById('contenedor-fotos');
+          const mensajeFotos = contenedorFotos.querySelector('.mensaje-error');
+
+          if (!tieneAlMenosUnaFoto) {
+            esValido = false;
+            contenedorFotos.classList.add('input-error');
+            if (mensajeFotos) {
+              mensajeFotos.textContent = "Debe subir al menos una foto.";
+              mensajeFotos.style.display = "inline";
+            }
+          } else {
+            contenedorFotos.classList.remove('input-error');
+            if (mensajeFotos) {
+              mensajeFotos.textContent = "";
+              mensajeFotos.style.display = "none";
+            }
+          }
+        }
+      );
 
       if (!esValido) {
-        modal.style.display = 'none';
         mostrarMensajeError("Por favor llenar los datos obligatorios correctamente o verifique los opcionales.");
         return;
       }
 
-      modal.style.display = 'none';
       const success = document.getElementById('mensajeExito');
       if (success) success.style.display = 'block';
 
