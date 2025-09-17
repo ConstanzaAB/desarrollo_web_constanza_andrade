@@ -1,25 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pantalla de Inicio</title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
-<body>
+{% extends 'base.html' %}
 
-  <header>
-    <h1>Cat&Dog</h1>
-  </header>
+{% block title %}Inicio - Cat&Dog{% endblock %}
 
-  <nav>
-    <a href="index.HTML">Inicio</a>
-    <a href="form_add.HTML">Agregar aviso de adopción</a>
-    <a href="see_post.HTML">Ver avisos</a>
-    <a href="statistics.HTML">Estadísticas</a>
-  </nav>
-
-  
+{% block content %}
   <h1>Todos los avisos</h1>
 
   <table class="tabla-c-avisos">
@@ -96,7 +79,4 @@
     </tr>
   </tbody>
 </table>
-    
-
-</body>
-</html>
+{% endblock %}
