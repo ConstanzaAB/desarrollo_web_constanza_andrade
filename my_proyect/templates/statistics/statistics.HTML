@@ -1,23 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pantalla de Inicio</title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
-<body>
+{% extends 'base.html' %}
 
-  <header>
-    <h1>Cat&Dog</h1>
-  </header>
+{% block title %}Estadisticas - Cat&Dog{% endblock %}
 
-  <nav>
-    <a href="index.HTML">Inicio</a>
-    <a href="form_add.HTML">Agregar aviso de adopción</a>
-    <a href="see_post.HTML">Ver avisos</a>
-    <a href="statistics.HTML">Estadísticas</a>
-  </nav>
+{% block content %}
 
   <h1>Estadísticas</h1>
 
@@ -25,21 +10,19 @@
     <div class="fila-graficos">
     <div class="grafico-contenedor">
       <h2 class="subtitle">Adopciones por especie</h2>
-      <img class="grafico-cuadrado" src="img/Gráfico_2.png" alt="Adopciones por especie">
+      <img class="grafico-cuadrado" src="{{ url_for('static', filename = 'img/Gráfico_2.png' )}}" alt="Adopciones por especie">
     </div>
     <div class="grafico-contenedor">
       <h2 class="subtitle">Cantidad de avisos por especie cada mes</h2>
-      <img class="grafico-horizontal-small" src="img/Gráfico_3.png" alt="Tasa de éxito">
+      <img class="grafico-horizontal-small" src="{{ url_for('static', filename = 'img/Gráfico_3.png' )}}" alt="Tasa de éxito">
     </div>
   </div>
     <div>
       <h2 class="subtitle"> Avisos por día</h2>
-      <img class="grafico-horizontal" src="img/Gráfico_1.png" alt="Por día">
+      <img class="grafico-horizontal" src="{{ url_for('static', filename = 'img/Gráfico_1.png' )}}" alt="Por día">
     </div>
     <button onclick="window.history.length > 1 ? window.history.back() : window.location.href='index.html'" class="button">
           ⬅ Volver atrás
     </button>
   </div>
-
-</body>
-</html>
+{% endblock %}

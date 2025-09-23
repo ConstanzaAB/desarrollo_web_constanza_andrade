@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Inicio - Cat&Dog{% endblock %}
+{% block title %}Todos los avisos - Cat&Dog{% endblock %}
 
 {% block content %}
   <h1>Todos los avisos</h1>
@@ -26,9 +26,9 @@
       <td>1 gato 1 año</td>
       <td>Sofia X: @sofia.en.linea</td>
       <td>
-        <img class="img-tabla" src="img/1_gato_naranjo.jpg" alt="Imagen de animales">
-        <img class="img-tabla" src="img/1_gato_naranjo_1.jpg" alt="Imagen de animales">
-        <img class="img-tabla" src="img/1_gato_naranjo_2.jpg" alt="Imagen de animales">
+        <img class="img-tabla" src="{{ url_for('static', filename = 'img/1_gato_naranjo.jpg')}}" alt="Imagen de animales">
+        <img class="img-tabla" src="{{ url_for('static', filename = 'img/1_gato_naranjo_1.jpg')}}" alt="Imagen de animales">
+        <img class="img-tabla" src="{{ url_for('static', filename = 'img/1_gato_naranjo_2.jpg')}}" alt="Imagen de animales">
       </td>
     </tr>
     <tr onclick="window.location.href='detalle2.HTML'">
@@ -39,8 +39,8 @@
       <td>1 gato 3 meses</td>
       <td>Juan Instagram: @soy.juan</td>
       <td>
-        <img class="img-tabla" src="img/1_gatito_negro_1.jpg" alt="Imagen de animales">
-        <img class="img-tabla" src="img/1_gatito_negro_2.jpg" alt="Imagen de animales">
+        <img class="img-tabla" src="{{ url_for('static', filename = 'img/1_gatito_negro_1.jpg')}}" alt="Imagen de animales">
+        <img class="img-tabla" src="{{ url_for('static', filename = 'img/1_gatito_negro_2.jpg')}}" alt="Imagen de animales">
       </td>
     </tr>
     <tr onclick="window.location.href='detalle3.HTML'">
@@ -50,7 +50,7 @@
       <td>Sur</td>
       <td>2 perros 4 meses</td>
       <td>Estrella Facebook: estrella.in.space</td>
-      <td><img class="img-tabla" src="img/2_perritos_1.jpg" alt="Imagen de animales"></td>
+      <td><img class="img-tabla" src="{{ url_for('static', filename = 'img/2_perritos_1.jpg')}}" alt="Imagen de animales"></td>
     </tr>
     <tr onclick="window.location.href='detalle4.HTML'">
       <td>22/08/2025 14:00</td>
@@ -60,8 +60,8 @@
       <td>1 perro 6 meses</td>
       <td>María Telegram: @m4ria.exe</td>
       <td>
-        <img class="img-tabla" src="img/perrito_1.jpg" alt="Imagen de animales">
-        <img class="img-tabla" src="img/perrito_2.jpg" alt="Imagen de animales">
+        <img class="img-tabla" src="{{ url_for('static', filename = 'img/perrito_1.jpg')}}" alt="Imagen de animales">
+        <img class="img-tabla" src="{{ url_for('static', filename = 'img/perrito_2.jpg')}}" alt="Imagen de animales">
       </td>
     </tr>
     <tr onclick="window.location.href='detalle5.HTML'">
@@ -72,9 +72,9 @@
       <td>2 perro 2 meses</td>
       <td>Felipe WhatsApp: +569 78654576</td>
       <td>
-        <img class="img-tabla" src="img/2_perritos_2.jpg" alt="Imagen de animales">
-        <img class="img-tabla" src="img/2_perritos_3.jpg" alt="Imagen de animales">
-        <img class="img-tabla" src="img/2_perritos_4.jpg" alt="Imagen de animales">
+        <img class="img-tabla" src="{{ url_for('static', filename = 'img/2_perritos_2.jpg')}}" alt="Imagen de animales">
+        <img class="img-tabla" src="{{ url_for('static', filename = 'img/2_perritos_3.jpg')}}" alt="Imagen de animales">
+        <img class="img-tabla" src="{{ url_for('static', filename = 'img/2_perritos_4.jpg')}}" alt="Imagen de animales">
       </td>
     </tr>
   </tbody>

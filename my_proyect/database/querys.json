@@ -1,0 +1,7 @@
+{
+    "get_aviso_by_id": "SELECT a.id, a.fecha_ingreso, a.nombre AS anunciante, a.email, a.celular, a.tipo, a.cantidad, a.edad, a.unidad_medida, a.fecha_entrega, a.descripcion, a.sector, c.nombre AS comuna, r.nombre AS region FROM actividad a JOIN comuna c ON a.comuna_id = c.id JOIN region r ON c.region_id = r.id WHERE a.id = %s;",
+    "get_fotos_by_aviso_id": "SELECT id, ruta_archivo, nombre_archivo FROM foto WHERE actividad_id = %s;",
+    "get_contactos_by_aviso_id": "SELECT id, nombre AS tipo_contacto, identificador FROM contactar_por WHERE actividad_id = %s;",
+    "get_aviso_completo": "SELECT a.id, a.nombre AS anunciante, a.email, a.tipo, a.cantidad, a.edad, a.unidad_medida, a.fecha_entrega, a.descripcion, c.nombre AS comuna, r.nombre AS region, f.nombre_archivo AS foto, cp.nombre AS tipo_contacto, cp.identificador FROM actividad a JOIN comuna c ON a.comuna_id = c.id JOIN region r ON c.region_id = r.id LEFT JOIN foto f ON f.actividad_id = a.id LEFT JOIN contactar_por cp ON cp.actividad_id = a.id WHERE a.id = %s;"
+        
+}

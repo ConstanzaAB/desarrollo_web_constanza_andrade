@@ -1,22 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <title>Ingreso de Aviso</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script type= "module" src="js/main.js" ></script>
-  </head>
-  <body>
-    <header>
-    <h1>Cat&Dog</h1>
-    </header>
+{% extends 'base.html' %}
 
-    <nav>
-    <a href="index.HTML">Inicio</a>
-    <a href="form_add.HTML">Agregar aviso de adopción</a>
-    <a href="see_post.HTML">Ver avisos</a>
-    <a href="statistics.HTML">Estadísticas</a>
-    </nav>
+{% block title %}Ingreso aviso - Cat&Dog{% endblock %}
+
+{% block content %}
     <!-- Formulario -->
     <form id="form_aviso"   novalidate>
       <h2>Formulario de Adopción</h2>
@@ -241,8 +227,10 @@
       font-size: 16px;
     ">
       Hemos recibido la información de adopción, muchas gracias y suerte!
-    </div>
-      
+    </div> 
 
-  </body>
-</html>
+{% endblock %}
+
+{% block script %}
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}
