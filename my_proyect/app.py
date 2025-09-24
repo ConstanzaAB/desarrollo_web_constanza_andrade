@@ -1,11 +1,37 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, Blueprint
 from werkzeug.utils import secure_filename
 import filetype
 import os
 from datetime import datetime, timedelta
 import re
+from database.bd import get_comunas_por_region, get_all_regiones
+
+bp = Blueprint('api', __name__)
+
+@bp.route('/api/regiones', methods=['GET'])
+def api_get_regiones():
+    try:
+        regiones = get_all_regiones()
+        result = [{'id': r.id, 'nombre': r.nombre} for r in regiones]
+        return jsonify(result)
+    except Exception as e:
+        print("Error en /api/regiones:", e)  # Esto imprime el error real
+        return jsonify({'error': f'Error al obtener regiones: {e}'}), 500
+
+@bp.route('/api/comunas/<int:region_id>', methods=['GET'])
+def api_get_comunas(region_id):
+    try:
+        comunas = get_comunas_por_region(region_id)
+        result = [{'id': c.id, 'nombre': c.nombre} for c in comunas]
+        return jsonify(result)
+    except Exception as e:
+        print("❌ Error al obtener comunas:", e)
+        return jsonify({'error': 'Error al obtener comunas'}), 500
+
 
 app = Flask(__name__)
+
+app.register_blueprint(bp)
 
 # Máximo 5MB por foto
 MAX_FILE_SIZE = 5 * 1024 * 1024  
@@ -13,18 +39,6 @@ MAX_FILE_SIZE = 5 * 1024 * 1024
 MAX_FILES = 10
 # Redes sociales permitidas (ejemplo)
 REDES_VALIDAS = {"facebook", "twitter", "instagram", "linkedin", "tiktok"}
-
-# Región y comunas según tu estructura (debes adaptar a tu data real)
-regionKeyToName = {
-    "arica": "Región Arica y Parinacota",
-    "tarapaca": "Región de Tarapacá",
-    # ... Completa con todas las regiones
-}
-
-region_comuna = {
-    "Región Arica y Parinacota": ["Comuna1", "Comuna2"],  # Ejemplo
-    # ... Completa con las comunas reales
-}
 
 def validar_email(email):
     if not email or len(email) < 3 or len(email) > 100:
@@ -47,13 +61,15 @@ def validar_numero(valor, minv, maxv):
     except:
         return False
 
-def validar_region_comuna(region_key, comuna_val):
-    region_nombre = regionKeyToName.get(region_key)
-    if not region_nombre:
+def validar_region_comuna(region_id, comuna_id):
+    regiones = get_all_regiones()
+    region_ids = [r.id for r in regiones]
+    if region_id not in region_ids:
         return False
-    comunas_validas = region_comuna.get(region_nombre, [])
-    return comuna_val in [c.lower() for c in comunas_validas]
 
+    comunas = get_comunas_por_region(region_id)
+    comuna_ids = [c.id for c in comunas]
+    return comuna_id in comuna_ids
 def validar_redes_sociales(redes):
     if not redes or len(redes) > 5:
         return False
@@ -85,6 +101,7 @@ def validar_archivo(file):
     if kind is None or not kind.mime.startswith("image/"):
         return False
     return True
+
 
 @app.route('/form_add', methods=['GET', 'POST'])
 def form_add():
@@ -118,8 +135,8 @@ def form_add():
 
     # Validar edad
     edad = data.get('edad', '').strip()
-    if not validar_numero(edad, 18, 120):
-        errores.append({'campo': 'edad', 'mensaje': 'Edad debe ser número entre 18 y 120'})
+    if not validar_numero(edad, 1, 20):
+        errores.append({'campo': 'edad', 'mensaje': 'Edad debe ser número entre 1 y 20'})
 
     # Validar región y comuna
     region = data.get('region', '').strip()
@@ -164,7 +181,8 @@ def form_add():
                 break
 
     if errores:
-        return jsonify({'success': False, 'errores': errores}), 400
+        mensaje_resumido = errores[0]['mensaje'] if errores else 'Error desconocido'
+        return jsonify({'success': False, 'error': mensaje_resumido, 'errores': errores}), 400
 
     # Si todo está OK, procesa y guarda (ejemplo guardar archivos)
     carpeta_guardar = './uploads'

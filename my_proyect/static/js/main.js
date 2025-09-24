@@ -3,64 +3,62 @@ import { Validador } from './validador.js';
 
 // --- FUNCIONES DE AYUDA ---
 
-const regionKeyToName = {
-  "arica": "Región Arica y Parinacota",
-  "tarapaca": "Región de Tarapacá",
-  "antofagasta": "Región de Antofagasta",
-  "atacama": "Región de Atacama",
-  "coquimbo": "Región de Coquimbo",
-  "valparaiso": "Región de Valparaíso",
-  "metropolitana": "Región Metropolitana de Santiago",
-  "ohiggins": "Región del Libertador Bernardo Ohiggins",
-  "maule": "Región del Maule",
-  "nuble": "Región del Ñuble",
-  "biobio": "Región del Biobío",
-  "araucania": "Región de La Araucanía",
-  "los-rios": "Región de Los Ríos",
-  "los-lagos": "Región de Los Lagos",
-  "aysen": "Región Aisén del General Carlos Ibáñez del Campo",
-  "magallanes": "Región de Magallanes y la Antártica Chilena"
-};
-
-function actualizarComunas(regionSelectId = 'region', comunaSelectId = 'comuna') {
+async function actualizarComunas(regionSelectId = 'region', comunaSelectId = 'comuna') {
   const regionSelect = document.getElementById(regionSelectId);
   const comunaSelect = document.getElementById(comunaSelectId);
 
   if (!regionSelect || !comunaSelect) return;
 
-  regionSelect.addEventListener("change", () => {
-    const regionKey = regionSelect.value;
-    const regionNombre = regionKeyToName[regionKey];
-
-    const regionData = region_comuna.regiones.find(r => r.nombre.trim() === regionNombre);
-    const comunas = regionData ? regionData.comunas : [];
-
-    comunaSelect.innerHTML = '<option value="">Seleccione una comuna</option>';
-
-    comunas.forEach(comuna => {
-      const option = document.createElement("option");
-      option.value = comuna.nombre.toLowerCase().replace(/\s+/g, "-");
-      option.textContent = comuna.nombre;
-      comunaSelect.appendChild(option);
+  // 1. Cargar regiones
+  try {
+    const regiones = await fetch('/api/regiones').then(res => res.json());
+    console.log("Respuesta de /api/regiones:", regiones);
+    regiones.forEach(region => {
+      const option = document.createElement('option');
+      option.value = region.id;
+      option.textContent = region.nombre;
+      regionSelect.appendChild(option);
     });
+  } catch (err) {
+    console.error('Error cargando regiones:', err);
+  }
+
+  // 2. Cargar comunas al seleccionar región
+  regionSelect.addEventListener('change', async () => {
+    const regionId = regionSelect.value;
+    comunaSelect.innerHTML = '<option value="">Cargando comunas...</option>';
+
+    try {
+      const comunas = await fetch(`/api/comunas/${regionId}`).then(res => res.json());
+      comunaSelect.innerHTML = '<option value="">Seleccione una comuna</option>';
+      comunas.forEach(comuna => {
+        const option = document.createElement('option');
+        option.value = comuna.id;
+        option.textContent = comuna.nombre;
+        comunaSelect.appendChild(option);
+      });
+    } catch (err) {
+      console.error('Error cargando comunas:', err);
+      comunaSelect.innerHTML = '<option value="">Error al cargar comunas</option>';
+    }
   });
 }
 
-function mostrarErrores(errores) {
-  errores.forEach(({ campo, mensaje }) => {
-    const input = document.getElementById(campo);
-    if (!input) return;
+// function mostrarErrores(errores) {
+//   errores.forEach(({ campo, mensaje }) => {
+//     const input = document.getElementById(campo);
+//     if (!input) return;
 
-    limpiarError(input);
+//     limpiarError(input);
 
-    const error = document.createElement("div");
-    error.className = "error";
-    error.textContent = mensaje;
+//     const error = document.createElement("div");
+//     error.className = "error";
+//     error.textContent = mensaje;
 
-    input.classList.add("input-error");
-    input.parentNode.appendChild(error);
-  });
-}
+//     input.classList.add("input-error");
+//     input.parentNode.appendChild(error);
+//   });
+// }
 
 function limpiarError(input) {
   input.classList.remove("input-error");
@@ -376,7 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append('identificador[]', dato);
       });
 
-      fetch('/crear-aviso', {
+      fetch('/form_add', {
         method: 'POST',
         body: formData
       })

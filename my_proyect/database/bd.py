@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, BigInteger, String, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, BigInteger, String, ForeignKey, DateTime, Date, Enum
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from datetime import datetime
 
@@ -22,72 +22,70 @@ Base = declarative_base()
 class Region(Base):
     __tablename__ = 'region'
 
-    id = Base.Column(Base.Integer, primary_key=True, autoincrement=True)
-    nombre = Base.Column(Base.String(200), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(200), nullable=False)
 
     # Una región tiene muchas comunas
-    comunas = Base.relationship('Comuna', backref='region', lazy=True)
+    comunas = relationship('Comuna', backref='region', lazy=True)
 
 
 class Comuna(Base):
     __tablename__ = 'comuna'
 
-    id = Base.Column(Base.Integer, primary_key=True, autoincrement=True)
-    nombre = Base.Column(Base.String(200), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(200), nullable=False)
 
-    region_id = Base.Column(Base.Integer, Base.ForeignKey('region.id'), nullable=False)
+    region_id = Column(Integer, ForeignKey('region.id'), nullable=False)
 
-    # Una comuna puede tener muchos avisos
-    actividades = Base.relationship('Actividad', backref='comuna', lazy=True)
 
 class Aviso(Base):
     __tablename__ = 'aviso_adopcion'
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    fecha_ingreso = Base.Column(Base.DateTime, nullable=False, default=datetime.utcnow)
+    fecha_ingreso = Column(DateTime, nullable=False, default=datetime.utcnow)
 
-    comuna_id = Base.Column(Base.Integer, nullable=False)
-    sector = Base.Column(Base.String(100), nullable=True)  
+    comuna_id = Column(Integer, ForeignKey('comuna.id'), nullable=False)
+    sector = Column(String(100), nullable=True)  
 
-    nombre = Base.Column(Base.String(200), nullable=False)  
-    email = Base.Column(Base.String(100), nullable=False)   
-    celular = Base.Column(Base.String(15), nullable=True)  
+    nombre = Column(String(200), nullable=False)  
+    email = Column(String(100), nullable=False)   
+    celular = Column(String(15), nullable=True)  
 
-    tipo = Base.Column(Base.Enum('gato', 'perro', name='tipo_animal'), nullable=False)
+    tipo = Column(Enum('gato', 'perro', name='tipo_animal'), nullable=False)
 
-    cantidad = Base.Column(Base.Integer, nullable=False)
-    edad = Base.Column(Base.Integer, nullable=False)
+    cantidad = Column(Integer, nullable=False)
+    edad = Column(Integer, nullable=False)
 
-    unidad_medida = Base.Column(Base.Enum('años', 'meses', name='unidad_edad'), nullable=False)
+    unidad_medida = Column(Enum('años', 'meses', name='unidad_edad'), nullable=False)
 
-    fecha_entrega = Base.Column(Base.Date, nullable=False)
+    fecha_entrega = Column(Date, nullable=False)
 
-    descripcion = Base.Column(Base.String(500), nullable=True) 
+    descripcion = Column(String(500), nullable=True) 
 
     # Relaciones
-    fotos = Base.relationship('Foto', backref='actividad', cascade='all, delete-orphan', lazy=True)
-    contactos = Base.relationship('ContactarPor', backref='actividad', cascade='all, delete-orphan', lazy=True)
+    fotos = relationship('Foto', backref='actividad', cascade='all, delete-orphan', lazy=True)
+    contactos = relationship('ContactarPor', backref='actividad', cascade='all, delete-orphan', lazy=True)
 
 class Foto(Base):
     __tablename__ = 'foto'
 
-    id = Base.Column(Base.Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
-    ruta_archivo = Base.Column(Base.String(300), nullable=False)      # Ej: 'uploads/perros/'
-    nombre_archivo = Base.Column(Base.String(300), nullable=False)    # Ej: 'foto123.jpg'
+    ruta_archivo = Column(String(300), nullable=False)      # Ej: 'uploads/perros/'
+    nombre_archivo = Column(String(300), nullable=False)    # Ej: 'foto123.jpg'
 
-    actividad_id = Base.Column(Base.Integer, Base.ForeignKey('actividad.id'), nullable=False)
+    actividad_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
 
 
 class ContactarPor(Base):
     __tablename__ = 'contactar_por'
 
-    id = Base.Column(Base.Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
-    nombre = Base.Column(Base.Enum(('WhatsApp', 'Instagram', 'Facebook', 'Telegram', 'X', 'Otro'), name='tipo_contacto'), nullable=False)
-    identificador = Base.Column(Base.String(150), nullable=False) # Ej: '@usuario' o número
+    nombre = Column(Enum('whatsapp', 'telegram', 'X', 'instagram', 'tiktok', 'otra', name='tipo_contacto'), nullable=False)
+    identificador = Column(String(150), nullable=False) # Ej: '@usuario' o número
 
-    actividad_id = Base.Column(Base.Integer, Base.ForeignKey('actividad.id'), nullable=False)
+    actividad_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
 
 # --- Database Functions ---
 
@@ -121,6 +119,21 @@ def get_aviso_by_id(aviso_id):
     session.close()
     return aviso
 
+def get_all_regiones():
+    session = SessionLocal()
+    try:
+        regiones = session.query(Region).order_by(Region.nombre).all()
+        return regiones
+    finally:
+        session.close()
+
+def get_comunas_por_region(region_id):
+    session = SessionLocal()
+    try:
+        comunas = session.query(Comuna).filter_by(region_id=region_id).order_by(Comuna.nombre).all()
+        return comunas
+    finally:
+        session.close()
 
 # Obtener todas las fotos de un aviso
 def get_fotos_by_aviso_id(aviso_id):
