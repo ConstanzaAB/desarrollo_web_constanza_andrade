@@ -2,9 +2,9 @@ from flask import Flask, request, jsonify, render_template, Blueprint
 from werkzeug.utils import secure_filename
 import filetype
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import re
-from database.bd import get_comunas_por_region, get_all_regiones
+from database.bd import get_comunas_por_region, get_all_regiones, create_aviso, create_foto, create_contactar_por
 
 bp = Blueprint('api', __name__)
 
@@ -62,14 +62,9 @@ def validar_numero(valor, minv, maxv):
         return False
 
 def validar_region_comuna(region_id, comuna_id):
-    regiones = get_all_regiones()
-    region_ids = [r.id for r in regiones]
-    if region_id not in region_ids:
-        return False
+    return bool(region_id) and bool(comuna_id)
 
-    comunas = get_comunas_por_region(region_id)
-    comuna_ids = [c.id for c in comunas]
-    return comuna_id in comuna_ids
+
 def validar_redes_sociales(redes):
     if not redes or len(redes) > 5:
         return False
@@ -82,10 +77,14 @@ def validar_redes_sociales(redes):
 
 def validar_fecha_entrega(fecha_str):
     try:
-        fecha = datetime.fromisoformat(fecha_str)
-    except:
+        # Parsear el formato del input datetime-local
+        fecha = datetime.strptime(fecha_str, "%Y-%m-%dT%H:%M")
+        fecha = fecha.replace(tzinfo=timezone.utc)
+        print("Fecha entrega parseada:", fecha)
+    except ValueError:
         return False
-    ahora_mas_3h = datetime.now() + timedelta(hours=3)
+    print("Fecha entrega parseada:", fecha)
+    ahora_mas_3h = datetime.now(timezone.utc) + timedelta(hours=3)
     return fecha >= ahora_mas_3h
 
 def validar_archivo(file):
@@ -142,12 +141,17 @@ def form_add():
     region = data.get('region', '').strip()
     comuna = data.get('comuna', '').strip()
     if not validar_region_comuna(region, comuna):
+        print("Región o comuna inválida:", region, comuna)
         errores.append({'campo': 'region_comuna', 'mensaje': 'Región o comuna inválida'})
 
-    # Validar radio buttons (ejemplo: 'sexo' debe estar seleccionado)
-    sexo = data.get('sexo')
-    if not sexo:
-        errores.append({'campo': 'sexo', 'mensaje': 'Seleccione una opción para sexo'})
+    # Validar radio buttons 
+    tipo = data.get('tipo')  # 'perro' o 'gato'
+    if not tipo:
+        errores.append({'campo': 'tipo', 'mensaje': 'Seleccione una opción para tipo'})
+
+    unidad_edad = data.get('unidad_edad')  # 'perro' o 'gato'
+    if not unidad_edad:
+        errores.append({'campo': 'unidad_edad', 'mensaje': 'Seleccione una opción para unidad de edad'})
 
     # Validar redes sociales (recibimos JSON o formulario con campos específicos)
     # Aquí suponemos que te llegan como JSON en campo 'redes' o como parámetros específicos
@@ -165,7 +169,7 @@ def form_add():
         pass
 
     # Validar fecha entrega
-    fecha_entrega = data.get('fecha-entrega')
+    fecha_entrega = data.get('fecha_entrega')
     if not fecha_entrega or not validar_fecha_entrega(fecha_entrega):
         errores.append({'campo': 'fecha-entrega', 'mensaje': 'Fecha de entrega inválida o muy temprana'})
 
@@ -195,9 +199,54 @@ def form_add():
         f.save(filepath)
         nombres_guardados.append(filename)
 
-    # Guardar en base de datos o lo que necesites
+    # Parsear fecha entrega a datetime
+    try:
+        fecha_entrega_dt = datetime.fromisoformat(fecha_entrega)
+    except ValueError:
+        return jsonify({'success': False, 'error': 'Formato de fecha inválido'}), 400
 
-    return jsonify({'success': True, 'mensaje': 'Formulario recibido y validado correctamente', 'archivos': nombres_guardados})
+
+    comuna_id = int(comuna)
+    # Crear aviso en BD
+    try:
+        nuevo_aviso = create_aviso(
+            comuna_id=comuna_id,
+            sector=data.get('sector', ''),
+            nombre=nombre,
+            email=email,
+            celular=celular,
+            tipo=tipo,
+            cantidad=int(cantidad),
+            edad=int(edad),
+            unidad_medida=unidad_edad,
+            fecha_entrega=fecha_entrega_dt,
+            descripcion=data.get('descripcion', '')
+        )
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Error al guardar aviso: {str(e)}'}), 500
+
+    # Guardar fotos vinculadas al aviso
+    try:
+        for filename in nombres_guardados:
+            ruta = os.path.join(carpeta_guardar, filename)
+            create_foto(ruta_archivo=ruta, nombre_archivo=filename, actividad_id=nuevo_aviso.id)
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Error al guardar fotos: {str(e)}'}), 500
+
+    # Guardar formas de contacto
+    try:
+        if email:
+            create_contactar_por('email', email, nuevo_aviso.id)
+        if celular:
+            create_contactar_por('celular', celular, nuevo_aviso.id)
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Error al guardar contactos: {str(e)}'}), 500
+
+    return jsonify({
+        'success': True,
+        'mensaje': 'Formulario recibido y guardado correctamente',
+        'archivos': nombres_guardados
+    })
 
 @app.route('/') 
 def index(): 

@@ -12,7 +12,6 @@ async function actualizarComunas(regionSelectId = 'region', comunaSelectId = 'co
   // 1. Cargar regiones
   try {
     const regiones = await fetch('/api/regiones').then(res => res.json());
-    console.log("Respuesta de /api/regiones:", regiones);
     regiones.forEach(region => {
       const option = document.createElement('option');
       option.value = region.id;
@@ -385,7 +384,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (success) success.style.display = 'block';
 
             setTimeout(() => {
-              window.location.href = 'index.html';
+              window.location.href = '/';
             }, 2000);
           } else {
             mostrarMensajeError("Hubo un error: " + data.error);
