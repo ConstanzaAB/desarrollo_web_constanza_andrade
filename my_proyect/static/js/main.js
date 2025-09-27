@@ -372,7 +372,6 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append('tipo_contacto[]', tipo);
         formData.append('identificador[]', dato);
       });
-
       fetch('/form_add', {
         method: 'POST',
         body: formData

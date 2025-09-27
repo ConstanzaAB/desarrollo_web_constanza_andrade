@@ -4,53 +4,36 @@
 
 {% block content %}
   <h2>Bienvenido a Cat&Dog</h2>
+    {% if u_avisos %}
+      <table class="tabla-c-inicio">
+      <thead>
+        <tr>
+          <th>Fecha y Hora</th>
+          <th>Comuna</th>
+          <th>Sector</th>
+          <th>Cantidad, Tipo y Edad</th>
+          <th>Foto</th>
+        </tr>
+      </thead>
+      <tbody>
+                {% for aviso in u_avisos %}
+                <tr>
+                    <td>{{ aviso.fecha_ingreso.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ aviso.comuna.nombre }}</td>
+                    <td>{{ aviso.sector or 'N/A' }}</td>
+                    <td>{{ aviso.cantidad }} {{ aviso.tipo }} de {{ aviso.edad }} {{ 'años' if aviso.unidad_medida == 'a' else 'meses' }}</td>
+                    <td>
+                        <img src="{{ url_for('static', filename= aviso.fotos[0].ruta_archivo) }}" alt="aviso.foto.nombre_archivo" class="img-tabla">
 
-  <table class="tabla-c-inicio">
-    <thead>
-      <tr>
-        <th>Fecha y Hora</th>
-        <th>Comuna</th>
-        <th>Sector</th>
-        <th>Cantidad, Tipo y Edad</th>
-        <th>Foto</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>22/08/2025 14:30</td>
-        <td>Santiago</td>
-        <td>Centro</td>
-        <td>1 gato 1 año</td>
-        <td><img class="img-tabla" src="{{ url_for('static', filename='img/1_gato_naranjo.jpg') }}" alt="Gato naranjo"></td>
-      </tr>
-      <tr>
-        <td>22/08/2025 14:25</td>
-        <td>Ñuñoa</td>
-        <td>Plaza</td>
-        <td>1 gato 3 meses</td>
-        <td><img class="img-tabla" src="{{ url_for('static', filename='img/1_gatito_negro.jpg') }}" alt="Gatito negro"></td>
-      </tr>
-      <tr>
-        <td>22/08/2025 14:10</td>
-        <td>Estación Central</td>
-        <td>Sur</td>
-        <td>2 perros 4 meses</td>
-        <td><img class="img-tabla" src="{{ url_for('static', filename='img/2_perritos_1.jpg') }}" alt="Perritos"></td>
-      </tr>
-      <tr>
-        <td>22/08/2025 14:00</td>
-        <td>Quinta Normal</td>
-        <td>Parque</td>
-        <td>1 perro 6 meses</td>
-        <td><img class="img-tabla" src="{{ url_for('static', filename='img/perrito_1.jpg') }}" alt="Perrito"></td>
-      </tr>
-      <tr>
-        <td>22/08/2025 13:38</td>
-        <td>Independencia</td>
-        <td>Norte</td>
-        <td>1 perro 2 años</td>
-        <td><img class="img-tabla" src="{{ url_for('static', filename='img/perro_1.jpg') }}" alt="Perro"></td>
-      </tr>
-    </tbody>
-  </table>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+      <div style="text-align: center; margin-top: 40px;">
+          <img class='img-tabla' src="{{ url_for('static', filename='img/sin_avisos.png') }}" alt="Sin avisos" style="max-width: 500px; opacity: 0.8;">
+          <p style="font-size: 1.2em; color: #555;">No hay avisos disponibles en este momento.</p>
+      </div>
+    {% endif %}
 {% endblock %}

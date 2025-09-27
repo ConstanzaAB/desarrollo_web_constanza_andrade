@@ -31,4 +31,21 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") modal.style.display = "none";
   });
+
+  // <- Botón Volver Atrás
+  const volverBtn = document.getElementById("btn-volver");
+  if (volverBtn) {
+    const targetUrl = volverBtn.dataset.url;
+    volverBtn.addEventListener("click", () => {
+      window.location.href = targetUrl;
+    });
+  }
+  const inicioBtn = document.getElementById("btn-inicio");
+  if (inicioBtn) {
+    const inicioUrl = inicioBtn.dataset.url;
+    inicioBtn.addEventListener("click", () => {
+      window.location.href = inicioUrl;
+    });
+  }
+
 });

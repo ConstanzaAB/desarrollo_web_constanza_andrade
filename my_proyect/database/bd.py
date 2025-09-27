@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine, Column, Integer, BigInteger, String, ForeignKey, DateTime, Date, Enum
-from sqlalchemy.orm import sessionmaker, declarative_base, relationship
+from sqlalchemy import create_engine, Column, Integer, BigInteger, String, ForeignKey, DateTime, Date, Enum, desc
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship, joinedload
 from datetime import datetime
 
 DB_NAME = "tarea2"
@@ -42,7 +42,7 @@ class Aviso(Base):
     __tablename__ = 'aviso_adopcion'
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    fecha_ingreso = Column(DateTime, nullable=False, default=datetime.utcnow)
+    fecha_ingreso = Column(DateTime, nullable=False, default=datetime.now)
 
     comuna_id = Column(Integer, ForeignKey('comuna.id'), nullable=False)
     sector = Column(String(100), nullable=True)  
@@ -56,7 +56,7 @@ class Aviso(Base):
     cantidad = Column(Integer, nullable=False)
     edad = Column(Integer, nullable=False)
 
-    unidad_medida = Column(Enum('años', 'meses', name='unidad_edad'), nullable=False)
+    unidad_medida = Column(Enum('a', 'm', name='unidad_edad'), nullable=False)
 
     fecha_entrega = Column(Date, nullable=False)
 
@@ -65,6 +65,7 @@ class Aviso(Base):
     # Relaciones
     fotos = relationship('Foto', backref='actividad', cascade='all, delete-orphan', lazy=True)
     contactos = relationship('ContactarPor', backref='actividad', cascade='all, delete-orphan', lazy=True)
+    comuna = relationship('Comuna', backref='actividad')
 
 class Foto(Base):
     __tablename__ = 'foto'
@@ -111,13 +112,44 @@ def create_aviso(comuna_id, sector, nombre, email, celular, tipo, cantidad, edad
     session.close()
     return nuevo_aviso
 
+def get_all_avisos():
+    session = SessionLocal()
+    try:
+        # Cargar los avisos con las relaciones necesarias (comuna, fotos, contactos)
+        avisos = session.query(Aviso).options(
+            joinedload(Aviso.comuna).joinedload(Comuna.region),  # Cargar la región asociada a la comuna
+            joinedload(Aviso.fotos),  # Cargar todas las fotos asociadas al aviso
+            joinedload(Aviso.contactos)  # Cargar todas las formas de contacto asociadas al aviso
+        ).all()
+        
+        return avisos
+    finally:
+        session.close()
+
+def get_ultimos_5_avisos():
+    session = SessionLocal()
+    try:
+        avisos = session.query(Aviso).options(
+            joinedload(Aviso.comuna).joinedload(Comuna.region),
+            joinedload(Aviso.fotos)
+        ).order_by(desc(Aviso.fecha_ingreso)).limit(5).all()
+
+        return avisos
+    finally:
+        session.close()
 
 # Obtener un aviso por ID (con comuna y región si usas joinedload)
 def get_aviso_by_id(aviso_id):
     session = SessionLocal()
-    aviso = session.query(Aviso).filter_by(id=aviso_id).first()
-    session.close()
-    return aviso
+    try:
+        aviso = session.query(Aviso).options(
+            joinedload(Aviso.comuna).joinedload(Comuna.region),
+            joinedload(Aviso.fotos),
+            joinedload(Aviso.contactos)
+        ).filter(Aviso.id == aviso_id).first()
+        return aviso
+    finally:
+        session.close()
 
 def get_all_regiones():
     session = SessionLocal()

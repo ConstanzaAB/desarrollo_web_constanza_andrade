@@ -73,14 +73,13 @@
         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
           <select id="tipo-red">
             <option value="">Selecciona una red</option>
-            <option value="WhatsApp">WhatsApp</option>
-            <option value="Instagram">Instagram</option>
-            <option value="Facebook">Facebook</option>
-            <option value="Telegram">Telegram</option>
+            <option value="whatsapp">WhatsApp</option>
+            <option value="instagram">Instagram</option>
+            <option value="tiktok">TikTok</option>
+            <option value="telegram">Telegram</option>
             <option value="X">X (Twitter)</option>
-            <option value="Otro">Otro</option>
+            <option value="otra">Otro</option>
           </select>
-
           <!-- El input y el botón estarán ocultos por defecto -->
           <input type="text" id="dato-red" placeholder="Usuario / enlace" class="limitable" data-minlength="4" data-maxlength="50" style="display: none;">
           <small id="mensaje-error-red" class="mensaje-error" style="color: red; display: none;"></small>
@@ -128,11 +127,11 @@
           <label>Unidad <em class="label-nota">obligatorio</em></label>
           <div class="radio-group">
             <label>
-              <input type="radio" name="unidad_edad" value="meses" required>
+              <input type="radio" name="unidad_edad" value="m" required>
               Meses
             </label>
             <label>
-              <input type="radio" name="unidad_edad" value="años">
+              <input type="radio" name="unidad_edad" value="a">
               Años
             </label>
             <small class="mensaje-error" style="color: red; display: none;"></small>

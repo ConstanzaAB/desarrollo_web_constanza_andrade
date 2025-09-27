@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Todos los avisos - Cat&Dog{% endblock %}
+
+{% block content %}
+  <h1>Detalle del Aviso</h1>
+    <div class="detalle-contenido">
+    <div class="texto-detalle">
+
+      <p><strong>Región:</strong> {{ aviso.comuna.region.nombre }}</p>
+      <p><strong>Comuna:</strong> {{ aviso.comuna.nombre }}</p>
+      <p><strong>Sector:</strong> {{ aviso.sector or 'No especificado' }}</p>
+      <p><strong>Nombre Contacto:</strong> {{ aviso.nombre }}</p>
+      <p><strong>email:</strong> {{ aviso.email }}</p>
+      {% if aviso.celular %}
+        <p><strong>Celular:</strong> {{ aviso.celular }}</p>
+      {% endif %}
+      {% if aviso.contactos %}
+        <p><strong>Contactar por:</strong>
+            <ul>
+              {% for contacto in aviso.contactos %}
+                <li>{{ contacto.nombre }}: {{ contacto.identificador }}</li>
+              {% endfor %}
+            </ul>
+        </p>
+      {% endif %}
+
+      <p><strong>Cantidad y Tipo:</strong> {{ aviso.cantidad }} {{ aviso.tipo }}</p>
+      <p><strong>Edad:</strong> {{ aviso.edad }} {{ 'años' if aviso.unidad_medida == 'a' else 'meses' }}</p>
+
+      <p><strong>Fecha Publicación:</strong> {{ aviso.fecha_ingreso.strftime('%d/%m/%Y %H:%M') }}</p>
+      <p><strong>Fecha Entrega:</strong> {{ aviso.fecha_entrega.strftime('%d/%m/%Y %H:%M') }}</p>
+
+      <p><strong>Descripción:</strong> {{ aviso.descripcion or 'Sin descripción' }}</p>
+      <!-- Contenedor de botones al final -->
+      <div class="botones-contenedor">
+        <button id="btn-volver" class="button" data-url="{{ url_for('see_post') }}">
+          ⬅ Volver atrás
+        </button>
+        <button id="btn-inicio" class="button" data-url="{{ url_for('index') }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 4px;">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+          Inicio
+        </button>
+      </div>
+    </div>
+    <div class="imagen-lateral">
+      {% for foto in aviso.fotos %}
+        <img src="{{ url_for('static', filename=foto.ruta_archivo) }}"
+            alt= foto.nombre_archivo
+            class="imagen-miniatura"
+            onclick="abrirModal(this.src)">
+      {% endfor %}
+    </div>
+   
+
+  <!-- Modal para zoom -->
+  <div id="modal" class="modal-img" onclick="cerrarModal()">
+    <div class="modal-contenido" onclick="event.stopPropagation()">
+      <span class="cerrar-img-modal" onclick="cerrarModal()">×</span>
+      <img id="imagenAmpliada" class="modal-img-contenido"
+          src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+          alt="Imagen ampliada">
+    </div>
+  </div>
+
+{% endblock %}
+{% block script %}
+    <script type="module" src="{{ url_for('static', filename='js/detalles.js') }}"></script>
+{% endblock %}

@@ -4,7 +4,7 @@ import filetype
 import os
 from datetime import datetime, timedelta, timezone
 import re
-from database.bd import get_comunas_por_region, get_all_regiones, create_aviso, create_foto, create_contactar_por
+from database.bd import get_comunas_por_region, get_all_regiones, create_aviso, create_foto,get_all_avisos, create_contactar_por, get_aviso_by_id, get_ultimos_5_avisos
 
 bp = Blueprint('api', __name__)
 
@@ -25,7 +25,7 @@ def api_get_comunas(region_id):
         result = [{'id': c.id, 'nombre': c.nombre} for c in comunas]
         return jsonify(result)
     except Exception as e:
-        print("❌ Error al obtener comunas:", e)
+        print("Error al obtener comunas:", e)
         return jsonify({'error': 'Error al obtener comunas'}), 500
 
 
@@ -37,8 +37,12 @@ app.register_blueprint(bp)
 MAX_FILE_SIZE = 5 * 1024 * 1024  
 # Máximo fotos permitidas
 MAX_FILES = 10
-# Redes sociales permitidas (ejemplo)
-REDES_VALIDAS = {"facebook", "twitter", "instagram", "linkedin", "tiktok"}
+# Redes sociales permitidas 
+REDES_VALIDAS = {'whatsapp', 'telegram', 'X', 'instagram', 'tiktok', 'otra'}
+# Tipos de animales permitidos
+TIPOS_VALIDOS = {'gato', 'perro'}
+# Unidades de edad permitidas
+UNIDADES_EDAD_VALIDAS = {'a', 'm'}
 
 def validar_email(email):
     if not email or len(email) < 3 or len(email) > 100:
@@ -75,15 +79,20 @@ def validar_redes_sociales(redes):
             return False
     return True
 
+def validar_tipo(tipo):
+    return tipo in TIPOS_VALIDOS
+
+def validar_unidad_edad(unidad):
+
+    return unidad in UNIDADES_EDAD_VALIDAS
+
 def validar_fecha_entrega(fecha_str):
     try:
         # Parsear el formato del input datetime-local
         fecha = datetime.strptime(fecha_str, "%Y-%m-%dT%H:%M")
         fecha = fecha.replace(tzinfo=timezone.utc)
-        print("Fecha entrega parseada:", fecha)
     except ValueError:
         return False
-    print("Fecha entrega parseada:", fecha)
     ahora_mas_3h = datetime.now(timezone.utc) + timedelta(hours=3)
     return fecha >= ahora_mas_3h
 
@@ -104,6 +113,9 @@ def validar_archivo(file):
 
 @app.route('/form_add', methods=['GET', 'POST'])
 def form_add():
+
+    print("FormData recibido: ", request.form)
+
     if request.method == 'GET':
         # Aquí muestras el formulario
         return render_template('form/form_add.html')  # O la plantilla que tenga el form
@@ -141,32 +153,34 @@ def form_add():
     region = data.get('region', '').strip()
     comuna = data.get('comuna', '').strip()
     if not validar_region_comuna(region, comuna):
-        print("Región o comuna inválida:", region, comuna)
         errores.append({'campo': 'region_comuna', 'mensaje': 'Región o comuna inválida'})
 
     # Validar radio buttons 
-    tipo = data.get('tipo')  # 'perro' o 'gato'
-    if not tipo:
-        errores.append({'campo': 'tipo', 'mensaje': 'Seleccione una opción para tipo'})
+    especie = data.get('tipo')  # 'perro' o 'gato'
+    if not validar_tipo(especie):
+        errores.append({'campo': 'tipo', 'mensaje': 'Seleccione una opción para Tipo de animal'})
 
-    unidad_edad = data.get('unidad_edad')  # 'perro' o 'gato'
-    if not unidad_edad:
+    unidad_edad = data.get('unidad_edad')  # 'años' o 'meses'
+    
+    if not validar_unidad_edad(unidad_edad):
         errores.append({'campo': 'unidad_edad', 'mensaje': 'Seleccione una opción para unidad de edad'})
 
-    # Validar redes sociales (recibimos JSON o formulario con campos específicos)
-    # Aquí suponemos que te llegan como JSON en campo 'redes' o como parámetros específicos
-    redes = request.form.get('redes')
-    if redes:
-        import json
-        try:
-            redes_list = json.loads(redes)
-            if not validar_redes_sociales(redes_list):
-                errores.append({'campo': 'redes', 'mensaje': 'Redes sociales inválidas o demasiadas'})
-        except:
-            errores.append({'campo': 'redes', 'mensaje': 'Error al leer redes sociales'})
+    # Validar redes sociales 
+    tipos_contacto = data.getlist('tipo_contacto[]')  # Lista de tipos de redes sociales
+    identificadores = data.getlist('identificador[]')  # Lista de identificadores (usuarios o enlaces)
+
+    if tipos_contacto and identificadores:
+        # Validar que las listas de redes y los identificadores tengan el mismo tamaño
+        if len(tipos_contacto) != len(identificadores):
+            errores.append({'campo': 'redes', 'mensaje': 'El número de redes sociales y los identificadores no coinciden.'})
+
+        # Validar redes sociales
+        for tipo, identificador in zip(tipos_contacto, identificadores):
+            if not tipo or not identificador:
+                errores.append({'campo': 'redes', 'mensaje': f'El contacto para {tipo} es inválido.'})
     else:
-        # Si las redes son individuales, puedes validarlas aquí según tu estructura
-        pass
+        pass # Redes sociales son opcionales
+
 
     # Validar fecha entrega
     fecha_entrega = data.get('fecha_entrega')
@@ -188,8 +202,10 @@ def form_add():
         mensaje_resumido = errores[0]['mensaje'] if errores else 'Error desconocido'
         return jsonify({'success': False, 'error': mensaje_resumido, 'errores': errores}), 400
 
-    # Si todo está OK, procesa y guarda (ejemplo guardar archivos)
-    carpeta_guardar = './uploads'
+    # Si todo está OK, procesa y guarda 
+    BASE_DIR = os.path.abspath(os.path.dirname(__file__))  # Ruta absoluta del directorio donde está el archivo actual
+
+    carpeta_guardar = os.path.join(BASE_DIR, 'static', 'uploads')
     os.makedirs(carpeta_guardar, exist_ok=True)
     nombres_guardados = []
 
@@ -215,7 +231,7 @@ def form_add():
             nombre=nombre,
             email=email,
             celular=celular,
-            tipo=tipo,
+            tipo=especie,
             cantidad=int(cantidad),
             edad=int(edad),
             unidad_medida=unidad_edad,
@@ -225,23 +241,25 @@ def form_add():
     except Exception as e:
         return jsonify({'success': False, 'error': f'Error al guardar aviso: {str(e)}'}), 500
 
+    # **Guardar redes sociales** (usando la función `create_contactar_por`):
+    try:
+        print("Tipos contacto:", tipos_contacto)
+        print("Identificadores:", identificadores)  
+        for tipo, identificador in zip(tipos_contacto, identificadores):
+            create_contactar_por(tipo, identificador, nuevo_aviso.id)
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Error al guardar redes sociales: {str(e)}'}), 500
+
+
     # Guardar fotos vinculadas al aviso
     try:
         for filename in nombres_guardados:
-            ruta = os.path.join(carpeta_guardar, filename)
+            ruta = os.path.join("/uploads", filename)
             create_foto(ruta_archivo=ruta, nombre_archivo=filename, actividad_id=nuevo_aviso.id)
     except Exception as e:
         return jsonify({'success': False, 'error': f'Error al guardar fotos: {str(e)}'}), 500
 
-    # Guardar formas de contacto
-    try:
-        if email:
-            create_contactar_por('email', email, nuevo_aviso.id)
-        if celular:
-            create_contactar_por('celular', celular, nuevo_aviso.id)
-    except Exception as e:
-        return jsonify({'success': False, 'error': f'Error al guardar contactos: {str(e)}'}), 500
-
+    
     return jsonify({
         'success': True,
         'mensaje': 'Formulario recibido y guardado correctamente',
@@ -250,11 +268,18 @@ def form_add():
 
 @app.route('/') 
 def index(): 
-    return render_template('main/index.html') 
+    u_avisos=get_ultimos_5_avisos()
+    return render_template('main/index.html', u_avisos=u_avisos) 
+
+@app.route('/aviso/<int:aviso_id>')
+def ver_aviso(aviso_id):
+    aviso = get_aviso_by_id(aviso_id)
+    return render_template('posts/detalles.html', aviso=aviso)
 
 @app.route('/see_post') 
 def see_post(): 
-    return render_template('posts/see_post.html') 
+    avisos = get_all_avisos()
+    return render_template('posts/see_post.html', avisos=avisos) 
 
 @app.route('/statistics') 
 def statistics(): 

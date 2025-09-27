@@ -279,6 +279,7 @@ input[type="file"] {
   cursor: pointer;
 }
 /* ========== BOTONES ========== */
+
 button {
   background-color: #f48fb1;
   color: white;
@@ -308,6 +309,13 @@ button:hover {
 
 #lista-redes button:hover {
   color: #e91e63;
+}
+
+.botones-contenedor {
+  display: flex;
+  justify-content: flex-start; /* Los botones a la derecha; usa center o flex-start si quieres otra alineación */
+  gap: 10px; /* Espacio entre botones */
+  margin-top: 20px; /* Espacio arriba para separar del contenido */
 }
 
 /* ========== TABLA ========== */
