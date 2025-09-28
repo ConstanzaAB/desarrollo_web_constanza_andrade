@@ -224,28 +224,51 @@ document.addEventListener("DOMContentLoaded", () => {
       mostrarFecha.textContent = `La fecha mínima de entrega es: ${year}-${month}-${day} ${hours}:${minutes}`;
     }
 
-    // Contenedor y botón para agregar fotos
-    const contenedorFotos = document.getElementById('contenedor-fotos');
-    const botonAgregar = document.getElementById('agregar-foto');
-
-    contenedorFotos.addEventListener('change', (e) => {
-      if (e.target && e.target.matches('input[type="file"]')) {
-        if (e.target.files.length > 0) {
-          botonAgregar.style.display = 'inline-block';
-        }
-      }
+    // Contenedor y botón para agregar fotos 
+    const contenedorFotos = document.getElementById('contenedor-fotos'); 
+    const botonAgregar = document.getElementById('agregar-foto'); 
+    contenedorFotos.addEventListener('change', (e) => { 
+      if (e.target && e.target.matches('input[type="file"]')) { 
+        if (e.target.files.length > 0) { 
+          botonAgregar.style.display = 'inline-block'; 
+        } 
+      } 
     });
 
     botonAgregar.addEventListener('click', () => {
-      const nuevoInput = document.createElement('input');
-      nuevoInput.type = 'file';
-      nuevoInput.name = 'fotos[]';
-      nuevoInput.accept = 'image/*';
-      nuevoInput.classList.add('foto-input');
-      nuevoInput.style.marginTop = '10px';
+    // Crear contenedor para el input y el botón
+    const fotoWrapper = document.createElement('div');
+    fotoWrapper.classList.add('foto-wrapper');
+    fotoWrapper.style.marginTop = '10px';
+    fotoWrapper.style.display = 'flex';
+    fotoWrapper.style.alignItems = 'center';
 
-      contenedorFotos.appendChild(nuevoInput);
-      botonAgregar.style.display = 'none';
+    // Crear nuevo input
+    const nuevoInput = document.createElement('input');
+    nuevoInput.type = 'file';
+    nuevoInput.name = 'fotos[]';
+    nuevoInput.accept = 'image/*';
+    nuevoInput.classList.add('foto-input');
+
+    // Crear botón de eliminar
+    const btnEliminar = document.createElement('button');
+    btnEliminar.type = 'button';
+    btnEliminar.textContent = 'Eliminar';
+    btnEliminar.style.marginLeft = '10px';
+
+    btnEliminar.addEventListener('click', () => {
+      contenedorFotos.removeChild(fotoWrapper);
+    });
+
+    // Agregar al contenedor
+    fotoWrapper.appendChild(nuevoInput);
+    fotoWrapper.appendChild(btnEliminar);
+
+    // Agregar al DOM
+    contenedorFotos.appendChild(fotoWrapper);
+
+    // Ocultar el botón "Agregar otra foto" hasta que se seleccione un archivo
+    botonAgregar.style.display = 'none';
     });
 
     // Validación y modal de confirmación en el formulario

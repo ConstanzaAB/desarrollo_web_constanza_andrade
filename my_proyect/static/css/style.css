@@ -55,6 +55,51 @@ body {
   margin-left: 40px;
 }
 
+/* Contenedor de la paginación */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Estilo común para links y spans */
+.pagination a,
+.pagination span {
+  padding: 8px 12px;
+  border: 1px solid var(--color-borde);
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-principal);
+  background-color: var(--color-fondo);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover para links */
+.pagination a:hover {
+  background-color: var(--color-nav);
+  color: var(--color-principal);
+  border-color: var(--color-principal);
+}
+
+/* Links activos (por ejemplo, números de página si implementas) */
+.pagination a.active {
+  background-color: var(--color-principal);
+  color: white;
+  cursor: default;
+  border-color: var(--color-principal);
+}
+
+/* Spans deshabilitados */
+.pagination span.disabled {
+  color: var(--color-borde);
+  border-color: var(--color-borde);
+  cursor: default;
+  background-color: var(--color-fondo);
+}
 
 /* ================= HEADER ================== */
 header {

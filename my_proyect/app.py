@@ -4,14 +4,14 @@ import filetype
 import os
 from datetime import datetime, timedelta, timezone
 import re
-from database.bd import get_comunas_por_region, get_all_regiones, create_aviso, create_foto,get_all_avisos, create_contactar_por, get_aviso_by_id, get_ultimos_5_avisos
+from database import bd
 
 bp = Blueprint('api', __name__)
 
 @bp.route('/api/regiones', methods=['GET'])
 def api_get_regiones():
     try:
-        regiones = get_all_regiones()
+        regiones = bd.get_all_regiones()
         result = [{'id': r.id, 'nombre': r.nombre} for r in regiones]
         return jsonify(result)
     except Exception as e:
@@ -21,7 +21,7 @@ def api_get_regiones():
 @bp.route('/api/comunas/<int:region_id>', methods=['GET'])
 def api_get_comunas(region_id):
     try:
-        comunas = get_comunas_por_region(region_id)
+        comunas = bd.get_comunas_por_region(region_id)
         result = [{'id': c.id, 'nombre': c.nombre} for c in comunas]
         return jsonify(result)
     except Exception as e:
@@ -225,7 +225,7 @@ def form_add():
     comuna_id = int(comuna)
     # Crear aviso en BD
     try:
-        nuevo_aviso = create_aviso(
+        nuevo_aviso = bd.create_aviso(
             comuna_id=comuna_id,
             sector=data.get('sector', ''),
             nombre=nombre,
@@ -246,7 +246,7 @@ def form_add():
         print("Tipos contacto:", tipos_contacto)
         print("Identificadores:", identificadores)  
         for tipo, identificador in zip(tipos_contacto, identificadores):
-            create_contactar_por(tipo, identificador, nuevo_aviso.id)
+            bd.create_contactar_por(tipo, identificador, nuevo_aviso.id)
     except Exception as e:
         return jsonify({'success': False, 'error': f'Error al guardar redes sociales: {str(e)}'}), 500
 
@@ -255,7 +255,7 @@ def form_add():
     try:
         for filename in nombres_guardados:
             ruta = os.path.join("/uploads", filename)
-            create_foto(ruta_archivo=ruta, nombre_archivo=filename, actividad_id=nuevo_aviso.id)
+            bd.create_foto(ruta_archivo=ruta, nombre_archivo=filename, actividad_id=nuevo_aviso.id)
     except Exception as e:
         return jsonify({'success': False, 'error': f'Error al guardar fotos: {str(e)}'}), 500
 
@@ -268,18 +268,55 @@ def form_add():
 
 @app.route('/') 
 def index(): 
-    u_avisos=get_ultimos_5_avisos()
+    u_avisos=bd.get_ultimos_5_avisos()
     return render_template('main/index.html', u_avisos=u_avisos) 
 
 @app.route('/aviso/<int:aviso_id>')
 def ver_aviso(aviso_id):
-    aviso = get_aviso_by_id(aviso_id)
+    aviso = bd.get_aviso_by_id(aviso_id)
     return render_template('posts/detalles.html', aviso=aviso)
 
 @app.route('/see_post') 
 def see_post(): 
-    avisos = get_all_avisos()
-    return render_template('posts/see_post.html', avisos=avisos) 
+    all_avisos = bd.get_all_avisos()
+    all_avisos_sorted = sorted(all_avisos, key=lambda a: a.fecha_ingreso, reverse=True)
+    page = request.args.get('page', 1, type=int)
+    per_page = 5
+
+    total = len(all_avisos)
+    start = (page - 1) * per_page
+    end = start + per_page
+
+    avisos_paginated = all_avisos_sorted[start:end]
+
+    class Pagination:
+        def __init__(self, page, per_page, total):
+            self.page = page
+            self.per_page = per_page
+            self.total = total
+            self.pages = (total + per_page - 1) // per_page
+
+        @property
+        def has_prev(self):
+            return self.page > 1
+
+        @property
+        def has_next(self):
+            return self.page < self.pages
+
+        @property
+        def prev_num(self):
+            return self.page - 1
+
+        @property
+        def next_num(self):
+            return self.page + 1
+
+    pagination = Pagination(page, per_page, total)
+
+    return render_template('posts/see_post.html',
+                           avisos=avisos_paginated,
+                           pagination=pagination) 
 
 @app.route('/statistics') 
 def statistics(): 

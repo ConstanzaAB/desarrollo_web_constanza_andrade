@@ -27,7 +27,7 @@
                     <td>{{ aviso.fecha_ingreso.strftime('%d/%m/%Y %H:%M') }}</td>
                     <td>{{ aviso.fecha_entrega.strftime('%d/%m/%Y %H:%M') }}</td>
                     <td>{{ aviso.comuna.nombre }}</td>
-                    <td>{{ aviso.sector }}</td>
+                    <td>{{ aviso.sector or 'Sin definir'}}</td>
                     <td>{{ aviso.cantidad }} {{ aviso.tipo }}(s) de {{ aviso.edad }} {{ 'años' if aviso.unidad_medida == 'a' else 'meses' }}</td>
                     <td>
                       {% if aviso.contactos and aviso.contactos|length > 0 %}
@@ -51,6 +51,28 @@
                 {% endfor %}
             </tbody>
         </table>
+        <!-- PAGINACIÓN -->
+        {% if pagination.pages > 1 %}
+          <div class="pagination">
+            {% if pagination.has_prev %}
+              <a href="{{ url_for('see_post', page=1) }}">&laquo; Primera</a>
+              <a href="{{ url_for('see_post', page=pagination.prev_num) }}">Anterior</a>
+            {% else %}
+              <span class="disabled">&laquo; Primera</span>
+              <span class="disabled">Anterior</span>
+            {% endif %}
+
+            <span>Página {{ pagination.page }} de {{ pagination.pages }}</span>
+
+            {% if pagination.has_next %}
+              <a href="{{ url_for('see_post', page=pagination.next_num) }}">Siguiente</a>
+              <a href="{{ url_for('see_post', page=pagination.pages) }}">Última &raquo;</a>
+            {% else %}
+              <span class="disabled">Siguiente</span>
+              <span class="disabled">Última &raquo;</span>
+            {% endif %}
+          </div>
+        {% endif %}
     {% endif %}
 
 {% endblock %}
