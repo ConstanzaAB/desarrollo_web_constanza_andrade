@@ -255,7 +255,7 @@ def form_add():
     try:
         for filename in nombres_guardados:
             ruta = os.path.join("/uploads", filename)
-            bd.create_foto(ruta_archivo=ruta, nombre_archivo=filename, actividad_id=nuevo_aviso.id)
+            bd.create_foto(ruta_archivo=ruta, nombre_archivo=filename, aviso_id=nuevo_aviso.id)
     except Exception as e:
         return jsonify({'success': False, 'error': f'Error al guardar fotos: {str(e)}'}), 500
 

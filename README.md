@@ -2,7 +2,8 @@
 Uso de HTML5 Y CSS3
 ## Desiciones tomadas TAREA 2
 
-Para el correcto funcionamiento, se deben instalar las versiones señaladas en el archivo requirements.txt
+* Para el correcto funcionamiento, se deben instalar las versiones señaladas en el archivo requirements.txt.
+* Se agregaron 7 avisos para mostrar el correcto funcionamiento de la página
 
 ### Desiciones de almacenamiento.
 

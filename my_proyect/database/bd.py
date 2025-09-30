@@ -63,9 +63,9 @@ class Aviso(Base):
     descripcion = Column(String(500), nullable=True) 
 
     # Relaciones
-    fotos = relationship('Foto', backref='actividad', cascade='all, delete-orphan', lazy=True)
-    contactos = relationship('ContactarPor', backref='actividad', cascade='all, delete-orphan', lazy=True)
-    comuna = relationship('Comuna', backref='actividad')
+    fotos = relationship('Foto', backref='aviso', cascade='all, delete-orphan', lazy=True)
+    contactos = relationship('ContactarPor', backref='aviso', cascade='all, delete-orphan', lazy=True)
+    comuna = relationship('Comuna', backref='aviso')
 
 class Foto(Base):
     __tablename__ = 'foto'
@@ -75,7 +75,7 @@ class Foto(Base):
     ruta_archivo = Column(String(300), nullable=False)      # Ej: 'uploads/perros/'
     nombre_archivo = Column(String(300), nullable=False)    # Ej: 'foto123.jpg'
 
-    actividad_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
+    aviso_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
 
 
 class ContactarPor(Base):
@@ -86,7 +86,7 @@ class ContactarPor(Base):
     nombre = Column(Enum('whatsapp', 'telegram', 'X', 'instagram', 'tiktok', 'otra', name='tipo_contacto'), nullable=False)
     identificador = Column(String(150), nullable=False) # Ej: '@usuario' o número
 
-    actividad_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
+    aviso_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
 
 # --- Database Functions ---
 
@@ -170,7 +170,7 @@ def get_comunas_por_region(region_id):
 # Obtener todas las fotos de un aviso
 def get_fotos_by_aviso_id(aviso_id):
     session = SessionLocal()
-    fotos = session.query(Foto).filter_by(actividad_id=aviso_id).all()
+    fotos = session.query(Foto).filter_by(aviso_id=aviso_id).all()
     session.close()
     return fotos
 
@@ -178,18 +178,18 @@ def get_fotos_by_aviso_id(aviso_id):
 # Obtener todas las formas de contacto de un aviso
 def get_contactos_by_aviso_id(aviso_id):
     session = SessionLocal()
-    contactos = session.query(ContactarPor).filter_by(actividad_id=aviso_id).all()
+    contactos = session.query(ContactarPor).filter_by(aviso_id=aviso_id).all()
     session.close()
     return contactos
 
 
 # Crear una foto para un aviso
-def create_foto(ruta_archivo, nombre_archivo, actividad_id):
+def create_foto(ruta_archivo, nombre_archivo, aviso_id):
     session = SessionLocal()
     nueva_foto = Foto(
         ruta_archivo=ruta_archivo,
         nombre_archivo=nombre_archivo,
-        actividad_id=actividad_id
+        aviso_id=aviso_id
     )
     session.add(nueva_foto)
     session.commit()
@@ -197,12 +197,12 @@ def create_foto(ruta_archivo, nombre_archivo, actividad_id):
 
 
 # Crear una forma de contacto
-def create_contactar_por(tipo_contacto, identificador, actividad_id):
+def create_contactar_por(tipo_contacto, identificador, aviso_id):
     session = SessionLocal()
     nuevo_contacto = ContactarPor(
         nombre=tipo_contacto,
         identificador=identificador,
-        actividad_id=actividad_id
+        aviso_id=aviso_id
     )
     session.add(nuevo_contacto)
     session.commit()
