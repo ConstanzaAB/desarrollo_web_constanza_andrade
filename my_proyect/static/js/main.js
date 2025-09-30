@@ -1,4 +1,3 @@
-import { region_comuna } from './region_comuna.js';
 import { Validador } from './validador.js';
 
 // --- FUNCIONES DE AYUDA ---
