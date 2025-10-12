@@ -6,7 +6,10 @@
   <h1>Todos los avisos</h1>
 
   {% if avisos | length == 0 %}
-        <p class="no-avisos">No hay avisos disponibles.</p>
+      <div style="text-align: center; margin-top: 40px;">
+        <img class='img-tabla' src="{{ url_for('static', filename='img/sin_avisos.png') }}" alt="Sin avisos" style="max-width: 500px; opacity: 0.8;">
+        <p style="font-size: 1.2em; color: #555;">No hay avisos disponibles en este momento.</p>
+      </div>
     {% else %}
         <table class ="tabla-c-avisos">
             <thead>

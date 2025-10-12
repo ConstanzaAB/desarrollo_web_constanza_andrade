@@ -1,6 +1,7 @@
-from sqlalchemy import create_engine, Column, Integer, BigInteger, String, ForeignKey, DateTime, Date, Enum, desc
+from sqlalchemy import create_engine, Column, Integer, BigInteger, String, ForeignKey, DateTime, Date, Enum, desc, func, extract
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship, joinedload
 from datetime import datetime
+
 
 DB_NAME = "tarea2"
 DB_USERNAME = "cc5002"
@@ -87,6 +88,18 @@ class ContactarPor(Base):
     identificador = Column(String(150), nullable=False) # Ej: '@usuario' o número
 
     aviso_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
+
+
+class Comentario(Base):
+    __tablename__ = 'comentario'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    nombre = Column(String(80), nullable=False)
+    texto = Column(String(300), nullable=False)
+    fecha = Column(DateTime, nullable=False)
+
+    aviso_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
+
 
 # --- Database Functions ---
 
@@ -207,3 +220,69 @@ def create_contactar_por(tipo_contacto, identificador, aviso_id):
     session.add(nuevo_contacto)
     session.commit()
     session.close()
+
+def create_comentario(nombre, texto, fecha, aviso_id):
+    session = SessionLocal()
+    nuevo_comentario = Comentario(
+        nombre=nombre,
+        texto=texto,
+        fecha=fecha,
+        aviso_id=aviso_id
+    )
+    session.add(nuevo_comentario)
+    session.commit()
+    session.close()
+
+def get_avisos_por_dia():
+    session = SessionLocal()
+    try:
+        datos = (
+            session.query(func.date(Aviso.fecha_ingreso), func.count(Aviso.id))
+            .group_by(func.date(Aviso.fecha_ingreso))
+            .order_by(func.date(Aviso.fecha_ingreso))
+            .all()
+        )
+        return [
+            {"fecha": fecha.strftime("%Y-%m-%d"), "cantidad": cantidad}
+            for fecha, cantidad in datos
+        ]
+    finally:
+        session.close()
+
+def get_avisos_por_tipo():
+    session = SessionLocal()
+    try:
+        datos = (
+            session.query(Aviso.tipo, func.count(Aviso.id))
+            .group_by(Aviso.tipo)
+            .all()
+        )
+        return [
+            {"tipo": tipo, "cantidad": cantidad}
+            for tipo, cantidad in datos
+        ]
+    finally:
+        session.close()
+
+def get_avisos_por_mes_y_tipo():
+    session = SessionLocal()
+    try:
+        datos = (
+            session.query(
+                extract('month', Aviso.fecha_ingreso).label('mes'),
+                Aviso.tipo,
+                func.count(Aviso.id)
+            )
+            .group_by('mes', Aviso.tipo)
+            .order_by('mes')
+            .all()
+        )
+        resultado = {}
+        for mes, tipo, cantidad in datos:
+            mes = str(int(mes))  # ej: "1", "2"
+            if mes not in resultado:
+                resultado[mes] = {'perro': 0, 'gato': 0}
+            resultado[mes][tipo] = cantidad
+        return resultado
+    finally:
+        session.close()

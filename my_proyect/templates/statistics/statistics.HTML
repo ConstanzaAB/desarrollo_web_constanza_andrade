@@ -10,19 +10,22 @@
     <div class="fila-graficos">
     <div class="grafico-contenedor">
       <h2 class="subtitle">Adopciones por especie</h2>
-      <img class="grafico-cuadrado" src="{{ url_for('static', filename = 'img/Gráfico_2.png' )}}" alt="Adopciones por especie">
+      <canvas id="graficoTorta" width="400" height="400"></canvas>
     </div>
     <div class="grafico-contenedor">
       <h2 class="subtitle">Cantidad de avisos por especie cada mes</h2>
-      <img class="grafico-horizontal-small" src="{{ url_for('static', filename = 'img/Gráfico_3.png' )}}" alt="Tasa de éxito">
+      <canvas id="graficoBarras" width="700" height="400"></canvas>
     </div>
   </div>
     <div>
       <h2 class="subtitle"> Avisos por día</h2>
-      <img class="grafico-horizontal" src="{{ url_for('static', filename = 'img/Gráfico_1.png' )}}" alt="Por día">
+      <canvas id="graficoLineas" width="600" height="300"></canvas>
     </div>
     <button onclick="window.history.length > 1 ? window.history.back() : window.location.href='index.html'" class="button">
           ⬅ Volver atrás
     </button>
   </div>
+{% endblock %}
+{% block script%}
+  <script src="{{ url_for('static', filename='js/graficos.js') }}"></script>
 {% endblock %}

@@ -8,6 +8,7 @@ from database import bd
 
 bp = Blueprint('api', __name__)
 
+
 @bp.route('/api/regiones', methods=['GET'])
 def api_get_regiones():
     try:
@@ -316,7 +317,20 @@ def see_post():
 
     return render_template('posts/see_post.html',
                            avisos=avisos_paginated,
-                           pagination=pagination) 
+                           pagination=pagination)
+
+@app.route('/api/avisos_por_dia')
+def api_avisos_por_dia():
+    return jsonify(bd.get_avisos_por_dia())
+
+@app.route('/api/avisos_por_tipo')
+def api_avisos_por_tipo():
+    return jsonify(bd.get_avisos_por_tipo())
+
+@app.route('/api/avisos_por_mes_y_tipo')
+def api_avisos_por_mes_y_tipo():
+    return jsonify(bd.get_avisos_por_mes_y_tipo())
+
 
 @app.route('/statistics') 
 def statistics(): 
