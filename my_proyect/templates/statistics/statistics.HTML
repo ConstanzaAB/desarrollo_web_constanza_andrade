@@ -5,21 +5,20 @@
 {% block content %}
 
   <h1>Estadísticas</h1>
-
   <div class="container-grafico">
     <div class="fila-graficos">
     <div class="grafico-contenedor">
       <h2 class="subtitle">Adopciones por especie</h2>
-      <canvas id="graficoTorta" width="400" height="400"></canvas>
+      <canvas id="graficoTorta" class="grafico-cuadrado"></canvas>
     </div>
     <div class="grafico-contenedor">
       <h2 class="subtitle">Cantidad de avisos por especie cada mes</h2>
-      <canvas id="graficoBarras" width="700" height="400"></canvas>
+      <canvas id="graficoBarras" class="grafico-horizontal-small"></canvas>
     </div>
   </div>
     <div>
       <h2 class="subtitle"> Avisos por día</h2>
-      <canvas id="graficoLineas" width="600" height="300"></canvas>
+      <canvas id="graficoLineas" class="grafico.horizontal"></canvas>
     </div>
     <button onclick="window.history.length > 1 ? window.history.back() : window.location.href='index.html'" class="button">
           ⬅ Volver atrás
@@ -28,4 +27,6 @@
 {% endblock %}
 {% block script%}
   <script src="{{ url_for('static', filename='js/graficos.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 {% endblock %}

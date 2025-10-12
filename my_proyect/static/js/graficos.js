@@ -4,12 +4,17 @@ document.addEventListener('DOMContentLoaded', () => {
   cargarGraficoBarras();
 });
 
+const getColor = (varName) =>
+  getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+
 async function cargarGraficoLineas() {
   const res = await fetch('/api/avisos_por_dia');
   const data = await res.json();
 
   const fechas = data.map(d => d.fecha);
   const cantidades = data.map(d => d.cantidad);
+
+  const colorPrincipal = getColor('--color-principal');
 
   new Chart(document.getElementById('graficoLineas'), {
     type: 'line',
@@ -18,9 +23,20 @@ async function cargarGraficoLineas() {
       datasets: [{
         label: 'Avisos por día',
         data: cantidades,
-        borderColor: 'blue',
-        fill: false
+        borderColor: colorPrincipal,
+        backgroundColor: colorPrincipal + '33', // color transparente
+        fill: true,
+        tension: 0.3
       }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { precision: 0 }
+        }
+      }
     }
   });
 }
@@ -32,6 +48,13 @@ async function cargarGraficoTorta() {
   const tipos = data.map(d => d.tipo);
   const cantidades = data.map(d => d.cantidad);
 
+  const colorPrincipal = getColor('--color-principal');
+  const colorSecundario = getColor('--color-secundario');
+
+  const colores = tipos.map(tipo =>
+    tipo.toLowerCase() === 'gato' ? colorPrincipal : colorSecundario
+  );
+
   new Chart(document.getElementById('graficoTorta'), {
     type: 'pie',
     data: {
@@ -39,7 +62,7 @@ async function cargarGraficoTorta() {
       datasets: [{
         label: 'Avisos por tipo',
         data: cantidades,
-        backgroundColor: ['#f87979', '#79f8a9']
+        backgroundColor: colores
       }]
     }
   });
@@ -55,6 +78,9 @@ async function cargarGraficoBarras() {
   const datosPerros = meses.map(m => data[m]?.perro || 0);
   const datosGatos = meses.map(m => data[m]?.gato || 0);
 
+  const colorPrincipal = getColor('--color-principal');
+  const colorSecundario = getColor('--color-secundario');
+
   new Chart(document.getElementById('graficoBarras'), {
     type: 'bar',
     data: {
@@ -63,12 +89,12 @@ async function cargarGraficoBarras() {
         {
           label: 'Perros',
           data: datosPerros,
-          backgroundColor: '#4d90fe'
+          backgroundColor: colorSecundario
         },
         {
           label: 'Gatos',
           data: datosGatos,
-          backgroundColor: '#f4a261'
+          backgroundColor: colorPrincipal
         }
       ]
     },

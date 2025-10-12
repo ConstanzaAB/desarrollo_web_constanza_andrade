@@ -32,6 +32,25 @@
       <p><strong>Fecha Entrega:</strong> {{ aviso.fecha_entrega.strftime('%d/%m/%Y %H:%M') }}</p>
 
       <p><strong>Descripción:</strong> {{ aviso.descripcion or 'Sin descripción' }}</p>
+
+      <!-- Lista de comentarios-->
+      <h3 id="comentario-count">Comentarios</h3>
+      <div class="comentarios-lista">
+        <div id="lista-comentarios" class="comentarios-container">
+          <!-- Aquí van las cards de comentarios insertadas por JS -->
+        </div>
+      </div>
+
+      <!-- Formulario para agregar un comentario -->
+      <form id="form-comentario" data-aviso-id="{{ aviso.id }}">
+        <label for="nombre">Nombre:</label><br>
+        <input type="text" name="nombre" id="nombre" required><br>
+        <label for="texto">Comentario:</label><br>
+        <textarea name="texto" id="texto" rows="4" cols="50" required></textarea><br>
+        <button type="submit">Agregar Comentario</button>
+      </form>
+
+
       <!-- Contenedor de botones al final -->
       <div class="botones-contenedor">
         <button id="btn-volver" class="button" data-url="{{ url_for('see_post') }}">

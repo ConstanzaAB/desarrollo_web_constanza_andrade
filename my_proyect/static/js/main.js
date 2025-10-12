@@ -42,22 +42,6 @@ async function actualizarComunas(regionSelectId = 'region', comunaSelectId = 'co
   });
 }
 
-// function mostrarErrores(errores) {
-//   errores.forEach(({ campo, mensaje }) => {
-//     const input = document.getElementById(campo);
-//     if (!input) return;
-
-//     limpiarError(input);
-
-//     const error = document.createElement("div");
-//     error.className = "error";
-//     error.textContent = mensaje;
-
-//     input.classList.add("input-error");
-//     input.parentNode.appendChild(error);
-//   });
-// }
-
 function limpiarError(input) {
   input.classList.remove("input-error");
   const grupo = input.closest('.radio-group');

@@ -270,12 +270,50 @@ def form_add():
 @app.route('/') 
 def index(): 
     u_avisos=bd.get_ultimos_5_avisos()
-    return render_template('main/index.html', u_avisos=u_avisos) 
+    return render_template('main/index.html', u_avisos=u_avisos)
+
 
 @app.route('/aviso/<int:aviso_id>')
 def ver_aviso(aviso_id):
     aviso = bd.get_aviso_by_id(aviso_id)
     return render_template('posts/detalles.html', aviso=aviso)
+
+@app.route('/api/comentarios/<int:aviso_id>', methods=['GET'])
+def api_get_comentarios(aviso_id):
+    comentarios = bd.get_comentarios_by_aviso_id(aviso_id)
+    
+    # Convertimos cada comentario a un dict con los campos necesarios
+    comentarios_json = [
+        {
+            'nombre': comentario.nombre,
+            'texto': comentario.texto,
+            'fecha': comentario.fecha.strftime('%d/%m/%Y %H:%M')
+        }
+        for comentario in comentarios
+    ]
+
+    return jsonify(comentarios_json)
+
+@app.route('/api/comentarios', methods=['POST'])
+def api_agregar_comentario():
+    data = request.get_json()
+    nombre = data.get('nombre')
+    texto = data.get('texto')
+    aviso_id = data.get('aviso_id')
+
+    if not nombre or not texto or not aviso_id:
+        return jsonify({'success': False, 'mensaje': 'Faltan datos obligatorios'}), 400
+
+    try:
+        bd.create_comentario(
+            nombre=nombre,
+            texto=texto,
+            fecha=datetime.now(),
+            aviso_id=aviso_id
+        )
+        return jsonify({'success': True, 'mensaje': 'Comentario agregado correctamente'})
+    except Exception as e:
+        return jsonify({'success': False, 'mensaje': 'Error al guardar comentario'}), 500
 
 @app.route('/see_post') 
 def see_post(): 

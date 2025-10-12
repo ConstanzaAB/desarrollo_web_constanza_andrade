@@ -233,6 +233,19 @@ def create_comentario(nombre, texto, fecha, aviso_id):
     session.commit()
     session.close()
 
+def get_comentarios_by_aviso_id(aviso_id):
+    session = SessionLocal()
+    try:
+        comentarios = (
+            session.query(Comentario)
+            .filter(Comentario.aviso_id == aviso_id)
+            .order_by(Comentario.fecha.desc())  # Ordenar del más reciente al más antiguo
+            .all()
+        )
+        return comentarios
+    finally:
+        session.close()
+
 def get_avisos_por_dia():
     session = SessionLocal()
     try:
@@ -286,3 +299,4 @@ def get_avisos_por_mes_y_tipo():
         return resultado
     finally:
         session.close()
+
