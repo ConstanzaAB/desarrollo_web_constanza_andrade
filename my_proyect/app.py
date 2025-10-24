@@ -10,7 +10,7 @@ bp = Blueprint('api', __name__)
 
 
 @bp.route('/api/regiones', methods=['GET'])
-def api_get_regiones():
+def api_get_regiones(): #Para la elección de regiones
     try:
         regiones = bd.get_all_regiones()
         result = [{'id': r.id, 'nombre': r.nombre} for r in regiones]
@@ -20,7 +20,7 @@ def api_get_regiones():
         return jsonify({'error': f'Error al obtener regiones: {e}'}), 500
 
 @bp.route('/api/comunas/<int:region_id>', methods=['GET'])
-def api_get_comunas(region_id):
+def api_get_comunas(region_id): # Para la elección de las comunas
     try:
         comunas = bd.get_comunas_por_region(region_id)
         result = [{'id': c.id, 'nombre': c.nombre} for c in comunas]
@@ -242,7 +242,7 @@ def form_add():
     except Exception as e:
         return jsonify({'success': False, 'error': f'Error al guardar aviso: {str(e)}'}), 500
 
-    # **Guardar redes sociales** (usando la función `create_contactar_por`):
+    # Crear y guardar redes sociales
     try:
         print("Tipos contacto:", tipos_contacto)
         print("Identificadores:", identificadores)  
@@ -252,7 +252,7 @@ def form_add():
         return jsonify({'success': False, 'error': f'Error al guardar redes sociales: {str(e)}'}), 500
 
 
-    # Guardar fotos vinculadas al aviso
+    # Crear y guardar fotos vinculadas al aviso
     try:
         for filename in nombres_guardados:
             ruta = os.path.join("/uploads", filename)
@@ -275,7 +275,7 @@ def index():
 
 @app.route('/aviso/<int:aviso_id>')
 def ver_aviso(aviso_id):
-    aviso = bd.get_aviso_by_id(aviso_id)
+    aviso = bd.get_aviso_by_id(aviso_id) # Se obtiene un aviso segun su id
     return render_template('posts/detalles.html', aviso=aviso)
 
 @app.route('/api/comentarios/<int:aviso_id>', methods=['GET'])
@@ -305,7 +305,7 @@ def api_agregar_comentario():
         return jsonify({'success': False, 'mensaje': 'Faltan datos obligatorios'}), 400
 
     try:
-        bd.create_comentario(
+        bd.create_comentario( # Se crea un nuevo comentario
             nombre=nombre,
             texto=texto,
             fecha=datetime.now(),
@@ -317,7 +317,7 @@ def api_agregar_comentario():
 
 @app.route('/see_post') 
 def see_post(): 
-    all_avisos = bd.get_all_avisos()
+    all_avisos = bd.get_all_avisos() # Obtenemos todos los avisos
     all_avisos_sorted = sorted(all_avisos, key=lambda a: a.fecha_ingreso, reverse=True)
     page = request.args.get('page', 1, type=int)
     per_page = 5
@@ -328,7 +328,7 @@ def see_post():
 
     avisos_paginated = all_avisos_sorted[start:end]
 
-    class Pagination:
+    class Pagination: # Paginación para los avisos
         def __init__(self, page, per_page, total):
             self.page = page
             self.per_page = per_page

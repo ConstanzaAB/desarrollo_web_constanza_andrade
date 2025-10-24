@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
 const getColor = (varName) =>
   getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
 
-async function cargarGraficoLineas() {
-  const res = await fetch('/api/avisos_por_dia');
-  const data = await res.json();
+async function cargarGraficoLineas() { //Gráfico para los avisos por día 
+  const res = await fetch('/api/avisos_por_dia'); //obtenemos los datos
+  const data = await res.json();//Los transformamos a JSON
 
   const fechas = data.map(d => d.fecha);
   const cantidades = data.map(d => d.cantidad);
@@ -41,9 +41,9 @@ async function cargarGraficoLineas() {
   });
 }
 
-async function cargarGraficoTorta() {
-  const res = await fetch('/api/avisos_por_tipo');
-  const data = await res.json();
+async function cargarGraficoTorta() { //Gráfico de torta por especies (perro y gato) en total
+  const res = await fetch('/api/avisos_por_tipo');//obtenemos los datos
+  const data = await res.json();//Los transformamos a JSON
 
   const tipos = data.map(d => d.tipo);
   const cantidades = data.map(d => d.cantidad);
@@ -68,9 +68,9 @@ async function cargarGraficoTorta() {
   });
 }
 
-async function cargarGraficoBarras() {
-  const res = await fetch('/api/avisos_por_mes_y_tipo');
-  const data = await res.json();
+async function cargarGraficoBarras() { //Gráfico de barra por especie cada mes 
+  const res = await fetch('/api/avisos_por_mes_y_tipo');//obtenemos los datos
+  const data = await res.json();//Los transformamos a JSON
 
   const meses = Object.keys(data).map(m => parseInt(m)).sort((a, b) => a - b);
   const etiquetas = meses.map(m => new Date(0, m - 1).toLocaleString('es-CL', { month: 'long' }));

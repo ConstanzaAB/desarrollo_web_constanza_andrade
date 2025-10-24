@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      comentarios.forEach(({ nombre, texto, fecha }) => {
+      comentarios.forEach(({ nombre, texto, fecha }) => { //aquí se crea la tarjeta del comentario
         const div = document.createElement('div');
         div.classList.add('comentario');
 
