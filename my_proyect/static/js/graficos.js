@@ -7,105 +7,172 @@ document.addEventListener('DOMContentLoaded', () => {
 const getColor = (varName) =>
   getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
 
-async function cargarGraficoLineas() { //Gráfico para los avisos por día 
-  const res = await fetch('/api/avisos_por_dia'); //obtenemos los datos
-  const data = await res.json();//Los transformamos a JSON
+async function cargarGraficoLineas() {
+  // Obtener los datos desde tu API
+  const res = await fetch('/api/avisos_por_dia');
+  const data = await res.json();
 
+  // Procesar los datos
   const fechas = data.map(d => d.fecha);
   const cantidades = data.map(d => d.cantidad);
 
-  const colorPrincipal = getColor('--color-principal');
+  const colorPrincipal = getColor('--color-principal'); // si ya tienes esta función definida
 
-  new Chart(document.getElementById('graficoLineas'), {
-    type: 'line',
-    data: {
-      labels: fechas,
-      datasets: [{
-        label: 'Avisos por día',
-        data: cantidades,
-        borderColor: colorPrincipal,
-        backgroundColor: colorPrincipal + '33', // color transparente
-        fill: true,
-        tension: 0.3
-      }]
+  // Crear el gráfico con Highcharts
+  Highcharts.chart('graficoLineas', {
+    chart: {
+      type: 'line',
+      backgroundColor: 'transparent'
     },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: { precision: 0 }
-        }
+    title: {
+      text: 'Avisos por día'
+    },
+    xAxis: {
+      categories: fechas,
+      title: { text: 'Fecha' }
+    },
+    yAxis: {
+      title: { text: 'Cantidad' },
+      allowDecimals: false,
+      min: 0
+    },
+    series: [{
+      name: 'Avisos por día',
+      data: cantidades,
+      color: colorPrincipal
+    }],
+    plotOptions: {
+      line: {
+        dataLabels: { enabled: true },
+        enableMouseTracking: true
       }
+    },
+    credits: { enabled: false }, // oculta el logo de Highcharts
+    responsive: {
+      rules: [{
+        condition: { maxWidth: 600 },
+        chartOptions: { legend: { enabled: false } }
+      }]
     }
   });
 }
 
-async function cargarGraficoTorta() { //Gráfico de torta por especies (perro y gato) en total
-  const res = await fetch('/api/avisos_por_tipo');//obtenemos los datos
-  const data = await res.json();//Los transformamos a JSON
-
-  const tipos = data.map(d => d.tipo);
-  const cantidades = data.map(d => d.cantidad);
+async function cargarGraficoTorta() { // Gráfico de torta por especies (perro y gato)
+  const res = await fetch('/api/avisos_por_tipo');
+  const data = await res.json();
 
   const colorPrincipal = getColor('--color-principal');
   const colorSecundario = getColor('--color-secundario');
 
-  const colores = tipos.map(tipo =>
-    tipo.toLowerCase() === 'gato' ? colorPrincipal : colorSecundario
-  );
+  // Preparamos los datos para Highcharts (nombre + valor + color)
+  const seriesData = data.map(d => ({
+    name: d.tipo,
+    y: d.cantidad,
+    color: d.tipo.toLowerCase() === 'gato' ? colorPrincipal : colorSecundario
+  }));
 
-  new Chart(document.getElementById('graficoTorta'), {
-    type: 'pie',
-    data: {
-      labels: tipos,
-      datasets: [{
-        label: 'Avisos por tipo',
-        data: cantidades,
-        backgroundColor: colores
-      }]
-    }
+  Highcharts.chart('graficoTorta', {
+    chart: {
+      type: 'pie',
+      backgroundColor: 'transparent'
+    },
+    title: {
+      text: 'Avisos por tipo'
+    },
+    tooltip: {
+      pointFormat: '<b>{point.percentage:.1f}%</b> ({point.y} avisos)'
+    },
+    accessibility: {
+      point: { valueSuffix: '%' }
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+        }
+      }
+    },
+    credits: { enabled: false }, // quita el logo de Highcharts
+    series: [{
+      name: 'Avisos por tipo',
+      colorByPoint: true,
+      data: seriesData
+    }]
   });
 }
 
-async function cargarGraficoBarras() { //Gráfico de barra por especie cada mes 
-  const res = await fetch('/api/avisos_por_mes_y_tipo');//obtenemos los datos
-  const data = await res.json();//Los transformamos a JSON
 
+async function cargarGraficoBarras() { // Gráfico de barras por especie cada mes
+  const res = await fetch('/api/avisos_por_mes_y_tipo');
+  const data = await res.json();
+
+  // Obtener y ordenar los meses
   const meses = Object.keys(data).map(m => parseInt(m)).sort((a, b) => a - b);
-  const etiquetas = meses.map(m => new Date(0, m - 1).toLocaleString('es-CL', { month: 'long' }));
+  const etiquetas = meses.map(m =>
+    new Date(0, m - 1).toLocaleString('es-CL', { month: 'long' })
+  );
 
+  // Datos por tipo
   const datosPerros = meses.map(m => data[m]?.perro || 0);
   const datosGatos = meses.map(m => data[m]?.gato || 0);
 
+  // Colores personalizados
   const colorPrincipal = getColor('--color-principal');
   const colorSecundario = getColor('--color-secundario');
 
-  new Chart(document.getElementById('graficoBarras'), {
-    type: 'bar',
-    data: {
-      labels: etiquetas,
-      datasets: [
-        {
-          label: 'Perros',
-          data: datosPerros,
-          backgroundColor: colorSecundario
-        },
-        {
-          label: 'Gatos',
-          data: datosGatos,
-          backgroundColor: colorPrincipal
-        }
-      ]
+  // Crear el gráfico con Highcharts
+  Highcharts.chart('graficoBarras', {
+    chart: {
+      type: 'column',
+      backgroundColor: 'transparent'
     },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: { precision: 0 }
-        }
+    title: {
+      text: 'Avisos por mes y tipo'
+    },
+    xAxis: {
+      categories: etiquetas,
+      crosshair: true,
+      title: { text: 'Mes' }
+    },
+    yAxis: {
+      min: 0,
+      allowDecimals: false,
+      title: { text: 'Cantidad de avisos' }
+    },
+    tooltip: {
+      shared: true,
+      headerFormat: '<b>{point.key}</b><br/>',
+      pointFormat: '{series.name}: <b>{point.y}</b><br/>'
+    },
+    plotOptions: {
+      column: {
+        borderWidth: 0,
+        pointPadding: 0.1,
+        groupPadding: 0.2
       }
+    },
+    series: [
+      {
+        name: 'Perros',
+        data: datosPerros,
+        color: colorSecundario
+      },
+      {
+        name: 'Gatos',
+        data: datosGatos,
+        color: colorPrincipal
+      }
+    ],
+    credits: { enabled: false },
+    responsive: {
+      rules: [{
+        condition: { maxWidth: 600 },
+        chartOptions: { legend: { enabled: false } }
+      }]
     }
   });
 }
+

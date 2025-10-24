@@ -1,32 +1,35 @@
 {% extends 'base.html' %}
 
-{% block title %}Estadisticas - Cat&Dog{% endblock %}
+{% block title %}Estadísticas - Cat&Dog{% endblock %}
 
 {% block content %}
-
   <h1>Estadísticas</h1>
+
   <div class="container-grafico">
     <div class="fila-graficos">
-    <div class="grafico-contenedor">
-      <h2 class="subtitle">Adopciones por especie</h2>
-      <canvas id="graficoTorta" class="grafico-cuadrado"></canvas>
+      <div class="grafico-contenedor">
+        <h2 class="subtitle">Adopciones por especie</h2>
+        <div id="graficoTorta" class="grafico-cuadrado"></div>
+      </div>
+      <div class="grafico-contenedor">
+        <h2 class="subtitle">Cantidad de avisos por especie cada mes</h2>
+        <div id="graficoBarras" class="grafico-horizontal-small"></div>
+      </div>
     </div>
-    <div class="grafico-contenedor">
-      <h2 class="subtitle">Cantidad de avisos por especie cada mes</h2>
-      <canvas id="graficoBarras" class="grafico-horizontal-small"></canvas>
-    </div>
-  </div>
+
     <div>
-      <h2 class="subtitle"> Avisos por día</h2>
-      <canvas id="graficoLineas" class="grafico.horizontal"></canvas>
+      <h2 class="subtitle">Avisos por día</h2>
+      <div id="graficoLineas" class="grafico-horizontal"></div>
     </div>
+
     <button onclick="window.history.length > 1 ? window.history.back() : window.location.href='index.html'" class="button">
-          ⬅ Volver atrás
+      ⬅ Volver atrás
     </button>
   </div>
 {% endblock %}
-{% block script%}
-  <script src="{{ url_for('static', filename='js/graficos.js') }}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+{% block script %}
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="{{ url_for('static', filename='js/graficos.js') }}"></script>
 {% endblock %}
+
