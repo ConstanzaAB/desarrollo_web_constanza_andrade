@@ -1,5 +1,21 @@
 # Tarea 1
 Uso de HTML5 Y CSS3
+## Desiciones tomadas TAREA 3
+* Para el correcto funcionamiento, se deben instalar las versiones señaladas en el archivo requirements.txt.
+* Las desiciones tomadas en las tareas anteriores se mantienen.
+
+### Desiciones funcionales
+* Se crearon funciones para obtener los datos necesarios para los gráficos (api_avisos_por_dia(),get_avisos_por_tipo() y get_avisos_por_mes_y_tipo())
+* Se crearon funciones para obtener, crear y guardar los comentarios (create_comentario(...), get_comentarios_by_aviso_id(...))
+* Se utilizo Highcharts para crear los gráficos.
+
+### Desiciones de diseño
+* Los colores para los graficos se mantienen.
+* Los comentarios se veran en una tarjeta de color rosa claro, mostrando fecha y hora en la esquina derecha, el nombre en **negrito** y el comentario con letra normal. 
+* Los comentarios se ordenaran del más reciente al más antiguo.
+* Los comentarios se veran antes del formulario para agregar un nuevo comentario.
+* El formulario tiene los input solicitdo nombre y comentario dentro de una tarjeta blanca.
+
 ## Desiciones tomadas TAREA 2
 
 * Para el correcto funcionamiento, se deben instalar las versiones señaladas en el archivo requirements.txt.
