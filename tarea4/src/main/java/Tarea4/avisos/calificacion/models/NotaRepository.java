@@ -1,0 +1,11 @@
+package Tarea4.avisos.calificacion.models;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+public interface NotaRepository extends JpaRepository<Nota, Integer> {
+    List<Nota> findByAvisoId(Integer avisoId);
+
+    List<Nota> findByAvisoId(Long id);
+}
+

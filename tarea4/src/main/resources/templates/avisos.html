@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <title>Ver Avisos</title>
+</head>
+
+<body>
+  <main layout:fragment="contenido">
+    <!-- ✅ Mensaje de éxito -->
+    <div id="mensajeExito" class="mensaje-exito" style="display:none;">
+      Evaluación guardada correctamente
+    </div>
+
+    <div class="container">
+      <h2 class="resume-pag">Avisos de Adopción</h2>
+
+      <div class="tabla-c-avisos">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha de publicación</th>
+              <th>Sector</th>
+              <th>Cantidad / Tipo / Edad</th>
+              <th>Comuna</th>
+              <th>Nota</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="aviso : ${avisos}">
+              <td th:text="${aviso.id}"></td>
+              <td th:text="${#temporals.format(aviso.fechaIngreso, 'dd/MM/yyyy')}"></td>
+              <td th:text="${#strings.isEmpty(aviso.sector) ? 'Sin especificar' : aviso.sector}"></td>
+              <td th:text="${aviso.cantidad + ' ' + aviso.tipo + ' ' + aviso.edad + ' ' + 
+                      (#strings.equalsIgnoreCase(aviso.unidadMedida, 'a') ? 'años' : 
+                      (#strings.equalsIgnoreCase(aviso.unidadMedida, 'm') ? 'meses' : ''))}"></td>
+              <td th:text="${aviso.comuna.nombre}"></td>
+              <td th:text="${aviso.promedioNota == null ? '-' : #numbers.formatDecimal(aviso.promedioNota, 1, 1)}"></td>
+              <td><button type="button" class="btn-evaluar" th:attr="data-id=${aviso.id}">Evaluar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ✅ Modal -->
+    <div id="modalEvaluar" class="modal-evaluar" style="display: none;">
+      <div class="modal-contenido">
+          <span class="cerrar-modal" id="cerrarModal">&times;</span>
+          <h2>Evaluar aviso</h2>
+          <form id="formEvaluar">
+            <label for="nota">Selecciona una nota (1 a 7):</label>
+            <select id="nota" name="nota" required>
+                <option value="">Seleccione</option>
+                <option th:each="n : ${#numbers.sequence(1,7)}"
+                        th:value="${n}"
+                        th:text="${n}"></option>
+            </select>
+            <button type="submit">Guardar</button>
+          </form>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

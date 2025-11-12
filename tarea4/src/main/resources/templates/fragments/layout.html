@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:replace="${title}">Cat&Dog</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>Cat&Dog</h1>
+  </header>
+
+  <!-- Menú de navegación -->
+  <nav>
+    <a th:href="@{/}">Inicio</a>
+    <a th:href="@{/avisos/nuevo}">Agregar aviso de adopción</a>
+    <a th:href="@{/avisos}">Ver avisos</a>
+    <a th:href="@{/estadisticas}">Estadísticas</a>
+  </nav>
+
+  <!-- Contenido dinámico -->
+  <main th:fragment="contenido">
+    <!-- Aquí se insertan las vistas -->
+  </main>
+
+  <!-- ✅ bloque para scripts -->
+  <div th:fragment="scripts">
+    <script th:src="@{/js/evaluar.js}"></script>
+  </div>
+
+</body>
+</html>
