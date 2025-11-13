@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      layout:decorate="~{fragments/layout}">
 <head>
   <title>Ver avisos</title>
 </head>
@@ -9,7 +9,7 @@
   <div layout:fragment="contenido">
     <div class="pagina-informativa">
       <h2>Estamos trabajando para usted</h2>
-      <img th:src="@{/img/gato_en_computador.jpg}" alt="Ver avisos" class="imagen-pagina">
+      <img th:src="@{/img/gatito_en_computador.jpg}" alt="Ver avisos" class="imagen-pagina">
     </div>
   </div>
 </body>

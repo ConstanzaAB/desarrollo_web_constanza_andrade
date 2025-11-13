@@ -7,6 +7,18 @@
   --color-secundario: #E97132;
   --color-seleccion-fila: #f2c3a3;
 }
+/* ====== IMAGENES ====== */
+
+.imagen-pagina {
+  display: block;
+  width: 400px;                
+  height: 300px;               
+  object-fit: cover;          
+  border-radius: 12px;
+  margin: 40px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
 
 /* ====== RESETEO ====== */
 *,

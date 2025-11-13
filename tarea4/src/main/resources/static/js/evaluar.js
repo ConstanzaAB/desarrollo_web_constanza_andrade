@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // ✅ Actualizar el promedio en la tabla
       const fila = document.querySelector(`button[data-id="${avisoIdSeleccionado}"]`)
         .closest("tr")
-        .querySelector("td:nth-child(5)");
+        .querySelector("td:nth-child(6)");
       fila.textContent = result.promedio;
 
       // Cerrar modal
