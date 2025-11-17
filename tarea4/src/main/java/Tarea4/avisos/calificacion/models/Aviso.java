@@ -12,7 +12,7 @@ import java.util.List;
 public class Aviso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "fecha_ingreso", nullable = false)
     private LocalDateTime fechaIngreso = LocalDateTime.now();

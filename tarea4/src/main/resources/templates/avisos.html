@@ -24,7 +24,7 @@
                 <th>ID</th>
                 <th>Fecha de publicación</th>
                 <th>Sector</th>
-                <th>Cantidad / Tipo / Edad</th>
+                <th>Cantidad Tipo Edad</th>
                 <th>Comuna</th>
                 <th>Nota</th>
                 <th>Acciones</th>
@@ -34,11 +34,23 @@
               <tr th:each="aviso : ${avisos}">
                 <td th:text="${aviso.id}"></td>
                 <td th:text="${#temporals.format(aviso.fechaIngreso, 'dd/MM/yyyy')}"></td>
-                <td th:text="${#strings.isEmpty(aviso.sector) ? 'Sin especificar' : aviso.sector}"></td>
-                <td th:text="${#strings.trim(aviso.cantidad) + ' ' + #strings.trim(aviso.tipo) + ' ' + aviso.edad + ' ' + (#strings.equalsIgnoreCase(aviso.unidadMedida, 'a') ? 'años' : (#strings.equalsIgnoreCase(aviso.unidadMedida, 'm') ? 'meses' : ''))}"></td>
+                <td>
+                    <span th:if="${#strings.isEmpty(aviso.sector)}">Sin especificar</span>
+                    <span th:unless="${#strings.isEmpty(aviso.sector)}" th:text="${aviso.sector}"></span>
+                </td>
+                <td>
+                    <span th:text="${aviso.cantidad}"></span>
+                    <span th:text="${aviso.tipo}"></span>
+                    <span th:text="${aviso.edad}"></span>
+                    <span th:if="${aviso.unidadMedida == 'a'}">años</span>
+                    <span th:unless="${aviso.unidadMedida == 'a'}">meses</span>
+                </td>
                 <td th:text="${#strings.escapeXml(aviso.comuna.nombre)}"></td>
-                <td th:text="${aviso.promedioNota == null ? '-' : #numbers.formatDecimal(aviso.promedioNota, 1, 1)}"></td>
-                <td><button type="button" class="btn-evaluar" th:attr="data-id=${aviso.id}">Evaluar</button></td>
+                <td>
+                    <span th:if="${aviso.promedioNota == null}">-</span>
+                    <span th:unless="${aviso.promedioNota == null}" th:text="${aviso.promedioNota}"></span>
+                </td>
+                <td><button type="button" class="btn-evaluar" th:attr="data-id=${aviso.id}">evaluar</button></td>
               </tr>
             </tbody>
           </table>

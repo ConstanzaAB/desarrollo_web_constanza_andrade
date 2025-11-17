@@ -1,7 +1,10 @@
-package Tarea4.avisos.calificacion.models;
+package Tarea4.avisos.calificacion.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import Tarea4.avisos.calificacion.models.Aviso;
+
 import org.springframework.data.jpa.repository.EntityGraph;
 import java.util.Optional;
 import java.util.List;

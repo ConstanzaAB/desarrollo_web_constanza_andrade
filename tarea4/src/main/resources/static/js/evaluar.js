@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let avisoIdSeleccionado = null;
 
-  // Abrir modal
+  // Abre el modal
   document.querySelectorAll(".btn-evaluar").forEach(btn => {
     btn.addEventListener("click", () => {
       avisoIdSeleccionado = btn.getAttribute("data-id");
@@ -14,13 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Cerrar modal
+  // Cierra el modal
   cerrarModal.addEventListener("click", () => {
     modal.style.display = "none";
     form.reset();
   });
 
-  // Enviar nota
+  // Envia la nota
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!avisoIdSeleccionado) return;
@@ -35,10 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const result = await response.json();
 
     if (response.ok) {
-      // ✅ Mostrar mensaje arriba
+      // Muestra el mensaje en la parte de arriba
       mostrarMensaje(result.message);
 
-      // ✅ Actualizar el promedio en la tabla
+      // Actualizar el promedio en la tabla columna Nota (6ta columna)
       const fila = document.querySelector(`button[data-id="${avisoIdSeleccionado}"]`)
         .closest("tr")
         .querySelector("td:nth-child(6)");
@@ -55,10 +55,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function mostrarMensaje(texto) {
     const mensaje = document.createElement("div");
     mensaje.textContent = texto;
-    mensaje.classList.add("mensaje-exito"); // usa el estilo del CSS
+    mensaje.classList.add("mensaje-exito"); // usa el estilo del CSS definido
     document.body.appendChild(mensaje);
 
-    // eliminar después de 2.5 segundos
+    // se elimina después de 2.5 segundos
     setTimeout(() => mensaje.remove(), 2500);
   }
 });

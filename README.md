@@ -1,5 +1,25 @@
-# Tarea 1
+# Tareas de Desarrollo Aplicaciones Web
 Uso de HTML5 Y CSS3
+
+## Desiciones tomadas TAREA 4
+* Se uso la versión 25 de Java (la 24 no estaba disponible). Y se uso la extención de VSCode Spring Initializr Java Support.
+* Para esta tarea, tal como decia en el enunciado, solo se implemento la evaluacion de avisos de adopción. Por lo tanto, las rutas del menú solo tienen la vista inicio contiene lo solicitado para esta tarea, las otras rutas llevan a html con memes de gatos en computadores.
+* Se mantuvo el css base, como los colores y cambios de color con la interacción.
+* Como esta tarea se tenia que realizar con Java y Spring Boot se adapto solo lo necesario para mostrar la tabla con los datos de los avisos.
+* Se creo la carpeta "tarea4" que contiene todos los archivos creados para esta tarea (siguiendo el orden mostrado en la auxiliares), y se mantuvo lo anterio en la carpeta "my_proyect" para la adición de la tabla "nota".
+
+### Desiciones funcionales
+* El promedio se redondea al primer decimal, para simular notas reales.
+* Al presionar el botón evaluar se abre un modal que permite elegir una nota del 1 al 7 (ambos incluidos) con una lista desplegable que solo muestra los números aceptados. Una vez se presiona el botón guradar se muestra un mensaje de guardado correcto y se actualiza el promedio de la columna Nota. El modal cuenta con una "x" en caso de querer cerrarlo sin guardar.
+
+### Desiciones de diseño
+* Se mantuvo el header.
+* La tabla es exactamente igual (en orden y nombres) a la soliitada en el enunciado. Exceptuando el nombre la columna Nota, que esta con mayúscula y la última columna se nombro Acciones.
+* Si el aviso no presenta el atributo Sector, se muestra "Sin especificar".
+* Para el atributo Unidad edad, se decidio mostrar la palabra "años" si este era "a", y la palabra "meses" si no.
+* Todo el diseño del modal para evaluar un aviso, se eligio con el obejtivo de cumplir con los requerimientos (solo notas enteras, entre 1 y 7) y se mantuvieron los colores elegidos en la Tarea 1.
+
+
 ## Desiciones tomadas TAREA 3
 * Para el correcto funcionamiento, se deben instalar las versiones señaladas en el archivo requirements.txt.
 * Las desiciones tomadas en las tareas anteriores se mantienen.
